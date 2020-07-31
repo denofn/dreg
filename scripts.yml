@@ -1,0 +1,2 @@
+scripts:
+  start: deno run --unstable --allow-net analyzer/mod.ts
