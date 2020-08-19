@@ -1,15 +1,7 @@
-// @deno-types="https://unpkg.com/rollup@2.23.0/dist/rollup.d.ts"
-export { rollup } from "https://unpkg.com/rollup@2.23.0/dist/es/rollup.browser.js";
-export type {
-  Plugin,
-  ResolveIdResult,
-  RollupOptions,
-  RollupOutput,
-  RollupBuild,
-  OutputAsset,
-  OutputChunk,
-  OutputOptions,
-} from "https://unpkg.com/rollup@2.23.0/dist/rollup.d.ts";
+import { parse } from "https://jspm.dev/npm:@typescript-eslint/parser@3.7.1";
 
-export * from "https://cdn.jsdelivr.net/gh/denofn/type-fest@0.16.0/mod.ts";
-export { tokenize } from "./vendor/esprima@4.0.1/mod.ts";
+export * as flags from "https://deno.land/std@0.65.0/flags/mod.ts";
+export * as path from "https://deno.land/std@0.65.0/path/mod.ts";
+export * as typefest from "https://deno.land/x/typefest@0.16.0/mod.ts";
+
+export { parse };
