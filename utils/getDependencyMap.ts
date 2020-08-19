@@ -1,4 +1,4 @@
-import { typefest } from "../deps.ts";
+import { typefest } from "./deps.ts";
 
 export function getDependencyMap(pj: typefest.PackageJson): Record<string, string> {
   const depMap: Record<string, string> = {};

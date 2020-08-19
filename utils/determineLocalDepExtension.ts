@@ -1,4 +1,4 @@
-import { path } from "../deps.ts";
+import { path } from "./deps.ts";
 
 const jsExtensions = [".js", ".es6", ".mjs"];
 const jsxExtensions = [".jsx", ".tsx"];

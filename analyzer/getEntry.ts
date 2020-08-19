@@ -1,4 +1,4 @@
-import { typefest } from "../deps.ts";
+import { typefest } from "./deps.ts";
 import { RegistryEntryGenerator } from "../utils/generateRegistryEntry.ts";
 
 /**

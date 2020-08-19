@@ -1,4 +1,4 @@
-import { path } from "../deps.ts";
+import { path } from "./deps.ts";
 import { RegistryEntryV1 } from "../runtime/types/registry.ts";
 import { jsdelivr } from "../utils/constants.ts";
 

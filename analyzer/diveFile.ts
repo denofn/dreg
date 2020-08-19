@@ -1,12 +1,13 @@
-import { parse, path } from "../deps.ts";
+import { parse, path, blue } from "./deps.ts";
 import { RegistryEntryV1 } from "../runtime/types/registry.ts";
 import { determineLocalDepExtension } from "../utils/determineLocalDepExtension.ts";
 import { esmSyntaxType } from "../utils/esmSyntaxNodes.ts";
+import { getSpinner } from "./spinner.ts";
 
 type DiveResult = Partial<Pick<RegistryEntryV1, "npmDeps" | "nativeDeps" | "localDeps">>;
 
 export async function diveFile(filePath: string, depMap: Record<string, string>): Promise<DiveResult> {
-  console.log(`Checking: ${filePath}`);
+  await getSpinner().setText(blue(`Checking: ${filePath}`));
 
   const diveResult: DiveResult = {
     npmDeps: {},

@@ -1,3 +1,4 @@
 scripts:
-  lock: deno cache deps.ts --unstable --lock=lock.json --lock-write
   analyzer: deno run --unstable --allow-net --allow-run --allow-read=. --allow-write=. analyzer/mod.ts
+  generate: deno run --allow-read=./registry.json --allow-write=./registry.ts scripts/generateRegistryTs.ts
+  serve: deno run --allow-net server.ts

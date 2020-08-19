@@ -1,4 +1,4 @@
-import { path, typefest } from "../deps.ts";
+import { path, typefest } from "./deps.ts";
 
 export async function fetchPj(basePath: string): Promise<[string, typefest.PackageJson]> {
   const url = new URL(path.join(basePath, "package.json"));

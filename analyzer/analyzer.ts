@@ -1,4 +1,4 @@
-import { path } from "../deps.ts";
+import { path, blue } from "./deps.ts";
 import { jsdelivr } from "../utils/constants.ts";
 import { fetchPj } from "../utils/fetchPj.ts";
 import { RegistryEntryV1 } from "../runtime/types/registry.ts";
@@ -6,6 +6,7 @@ import { RegistryEntryGenerator } from "../utils/generateRegistryEntry.ts";
 import { getDependencyMap } from "../utils/getDependencyMap.ts";
 import { diveFile } from "./diveFile.ts";
 import { getEntry } from "./getEntry.ts";
+import { getSpinner } from "./spinner.ts";
 
 export async function analyze(d: string, v?: string): Promise<RegistryEntryV1> {
   const R = new RegistryEntryGenerator({
@@ -20,7 +21,7 @@ export async function analyze(d: string, v?: string): Promise<RegistryEntryV1> {
 
   if (v) R.update({ version: v, description: pj.description ?? "" });
   else {
-    console.info(`Unversioned imports are not allowed. Checking latest version of ${d}: ${pj.version!}`);
+    await getSpinner().setText(blue(`Analyzing ${d}@${pj.version!}`));
     R.update({ version: pj.version!, description: pj.description ?? "" });
   }
 
