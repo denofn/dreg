@@ -1,0 +1,30 @@
+name: Deploys
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    env:
+      FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Deploy dev
+        if: github.ref == 'refs/heads/dev'
+        uses: superfly/flyctl-actions@1.1
+        with:
+          args: "deploy"
+
+      - name: Deploy prod
+        if: github.ref == 'refs/heads/main'
+        uses: superfly/flyctl-actions@1.1
+        with:
+          args: "deploy -c fly.prod.toml"
