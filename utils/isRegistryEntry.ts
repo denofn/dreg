@@ -9,6 +9,7 @@ const keys = ([
   "version",
   "rewrites",
   "isAtTypes",
+  "hasDefaultExport",
 ] as unknown) as (keyof RegistryEntryV1)[];
 
 export function isRegistryEntry(x: Partial<RegistryEntryV1>): x is RegistryEntryV1 {

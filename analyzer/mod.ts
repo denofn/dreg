@@ -15,12 +15,13 @@ if (doSanityCheck) {
   await sanityCheck(R);
 }
 
-await getSpinner().succeed(green(`Analyzed ${R.name}@${R.version}, prepared the following registry entry:\n`));
+await getSpinner().succeed(green(`Analyzed ${R.name}@${R.version}, prepared the following registry entry:`));
 
 const newDep = {
   [`${R.name}@${R.version}`]: R,
 };
 
+console.log("");
 console.log(JSON.stringify(newDep, null, 2));
 
 if (persist) {
@@ -37,5 +38,7 @@ if (persist) {
     )
   );
 
+  Deno.exit(0);
+} else {
   Deno.exit(0);
 }
