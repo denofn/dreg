@@ -1,4 +1,4 @@
-import { hash } from "./deps.ts";
+import { hash, path } from "./deps.ts";
 import { getSource } from "./getSource.ts";
 import { keys, registry } from "./runtimeRegistry.ts";
 
@@ -6,30 +6,44 @@ const encoder = new TextEncoder();
 
 type Params = {
   package: string;
-  filePath?: string;
+  org?: string;
+  0?: string;
 };
 
 export default async (context: any) => {
   const params: Params = context.params;
-  if (!keys.includes(params.package)) context.throw(404);
-  if (keys.includes(params.package)) {
-    const source = await getSource(registry[params.package as keyof typeof registry], params.package, params.filePath);
+  const pckge = `${!!params.org ? `@${params.org}/` : ""}${params.package}`;
+  const noSource = !params["0"] ?? true;
+  const registryEntry = registry[pckge as keyof typeof registry];
+  if (!keys.includes(pckge)) context.throw(404);
 
-    context.response.body = source;
+  const [source, fileURL] = await getSource(context.request.url.pathname, registryEntry, pckge, params["0"]);
+  const parsedFileUrl = path.parse(fileURL);
+  context.response.body = source;
+  context.response.headers.set(
+    "content-type",
+    `application/${parsedFileUrl.ext.startsWith(".ts") ? "typescript" : "javascript"}; charset=utf-8`
+  );
 
-    context.response.headers = new Headers({
-      "content-type": "application/typescript; charset=utf-8",
-      vary: "Accept-Encoding",
-      "cross-origin-resource-policy": "cross-origin",
-      "access-control-allow-origin": "*",
-      "access-control-expose-headers": "*",
-      etag: `W/"${encoder.encode(context.response.body).byteLength}-${hash
-        .createHash("sha1")
-        .update(context.response.body)
-        .toString()
-        .substring(0, 27)}"`,
-    });
-  } else {
-    context.throw(404);
+  if (noSource && registryEntry.entry.endsWith(".d.ts")) {
+    context.response.headers.set("x-typescript-types", path.join(context.request.url.pathname, registryEntry.entry));
+  } else if (noSource && registryEntry.typesEntry!) {
+    context.response.headers.set(
+      "x-typescript-types",
+      path.join(context.request.url.pathname, registryEntry.typesEntry!)
+    );
   }
+
+  context.response.headers.set("vary", "Accept-Encoding");
+  context.response.headers.set("cross-origin-resource-policy", "cross-origin");
+  context.response.headers.set("access-control-allow-origin", "*");
+  context.response.headers.set("access-control-expose-headers", "*");
+  context.response.headers.set(
+    "etag",
+    `W/"${encoder.encode(context.response.body).byteLength}-${hash
+      .createHash("sha1")
+      .update(context.response.body)
+      .toString()
+      .substring(0, 27)}"`
+  );
 };

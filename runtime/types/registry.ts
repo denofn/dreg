@@ -1,3 +1,5 @@
+export type Rewrites = Record<string, Record<string, string>>;
+
 export type RegistryEntryV1 = {
   name: string;
   importStrategy: "jsdelivr"; // jspm/skypack in v2
@@ -5,11 +7,9 @@ export type RegistryEntryV1 = {
   isAtTypes: boolean; // @types/x can serve for name replacement (@types/estree -> estree)
   version: string;
   description: string;
-  npmDeps: Record<string, string>; // only npm is versioned
   entry: string;
   typesEntry?: string;
-  nativeDeps: string[];
-  localDeps: Record<string, Record<string, string>>;
+  rewrites: Rewrites;
   // hasDefaultExport: boolean; // To be implemented
 };
 

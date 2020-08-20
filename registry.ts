@@ -1,4 +1,34 @@
+import type { Registry } from "./runtime/types/registry.ts";
 export default {
+  "estree-walker@2.0.1": {
+    "name": "estree-walker",
+    "importStrategy": "jsdelivr",
+    "importType": "npm",
+    "isAtTypes": false,
+    "version": "2.0.1",
+    "description": "Traverse an ESTree-compliant AST",
+    "entry": "src/estree-walker.js",
+    "typesEntry": "types/index.d.ts",
+    "rewrites": {
+      "https://cdn.jsdelivr.net/npm/estree-walker@2.0.1/src/estree-walker.js": {},
+      "https://cdn.jsdelivr.net/npm/estree-walker@2.0.1/types/index.d.ts": {
+        "\"estree\"": "\"/package/@types/estree@0.0.42\"",
+        "\"./sync\"": "\"./sync.d.ts\"",
+        "\"./async\"": "\"./async.d.ts\""
+      },
+      "https://cdn.jsdelivr.net/npm/estree-walker@2.0.1/types/sync.d.ts": {
+        "\"./walker\"": "\"./walker.d.ts\"",
+        "\"estree\"": "\"/package/@types/estree@0.0.42\""
+      },
+      "https://cdn.jsdelivr.net/npm/estree-walker@2.0.1/types/walker.d.ts": {
+        "\"estree\"": "\"/package/@types/estree@0.0.42\""
+      },
+      "https://cdn.jsdelivr.net/npm/estree-walker@2.0.1/types/async.d.ts": {
+        "\"./walker\"": "\"./walker.d.ts\"",
+        "\"estree\"": "\"/package/@types/estree@0.0.42\""
+      }
+    }
+  },
   "@types/estree@0.0.42": {
     "name": "@types/estree",
     "importStrategy": "jsdelivr",
@@ -6,12 +36,10 @@ export default {
     "isAtTypes": true,
     "version": "0.0.42",
     "description": "TypeScript definitions for ESTree AST specification",
-    "npmDeps": {},
     "entry": "index.d.ts",
-    "localDeps": {
+    "rewrites": {
       "https://cdn.jsdelivr.net/npm/@types/estree@0.0.42/index.d.ts": {}
-    },
-    "nativeDeps": []
+    }
   },
   "@types/estree@0.0.45": {
     "name": "@types/estree",
@@ -20,12 +48,10 @@ export default {
     "isAtTypes": true,
     "version": "0.0.45",
     "description": "TypeScript definitions for ESTree AST specification",
-    "npmDeps": {},
     "entry": "index.d.ts",
-    "localDeps": {
+    "rewrites": {
       "https://cdn.jsdelivr.net/npm/@types/estree@0.0.45/index.d.ts": {}
-    },
-    "nativeDeps": []
+    }
   },
   "type-fest@0.16.0": {
     "name": "type-fest",
@@ -35,8 +61,7 @@ export default {
     "version": "0.16.0",
     "description": "A collection of essential TypeScript types",
     "entry": "index.d.ts",
-    "npmDeps": {},
-    "localDeps": {
+    "rewrites": {
       "https://cdn.jsdelivr.net/npm/type-fest@0.16.0/index.d.ts": {
         "'./source/basic'": "'./source/basic.d.ts'",
         "'./source/except'": "'./source/except.d.ts'",
@@ -112,7 +137,6 @@ export default {
         "'./literal-union'": "'./literal-union.d.ts'"
       },
       "https://cdn.jsdelivr.net/npm/type-fest@0.16.0/source/tsconfig-json.d.ts": {}
-    },
-    "nativeDeps": []
+    }
   }
-}
+} as Registry;

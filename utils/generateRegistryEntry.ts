@@ -1,4 +1,4 @@
-import type { RegistryEntryV1 } from "../runtime/types/registry.ts";
+import type { RegistryEntryV1, Rewrites } from "../runtime/types/registry.ts";
 import { isRegistryEntry } from "./isRegistryEntry.ts";
 
 export class RegistryEntryGenerator {
@@ -13,6 +13,13 @@ export class RegistryEntryGenerator {
       ...e,
     };
   };
+
+  set updateTypeRewrites(rewrites: Rewrites) {
+    this._e.rewrites = {
+      ...(this._e.rewrites ?? {}),
+      ...rewrites,
+    };
+  }
 
   get entry(): RegistryEntryV1 | undefined {
     return isRegistryEntry(this._e) ? (this._e as RegistryEntryV1) : undefined;
@@ -32,5 +39,9 @@ export class RegistryEntryGenerator {
 
   get entryFile(): string | undefined {
     return this._e.entry;
+  }
+
+  get typesEntry(): string | undefined {
+    return this._e.typesEntry;
   }
 }

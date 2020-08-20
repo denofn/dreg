@@ -7,9 +7,7 @@ const keys = ([
   "importType",
   "entry",
   "version",
-  "npmDeps",
-  "nativeDeps",
-  "localDeps",
+  "rewrites",
   "isAtTypes",
 ] as unknown) as (keyof RegistryEntryV1)[];
 

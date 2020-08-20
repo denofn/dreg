@@ -4,7 +4,7 @@ import { flags, blue, green } from "./deps.ts";
 import { sanityCheck } from "./sanityCheck.ts";
 import { getSpinner } from "./spinner.ts";
 
-const { d, v, doSanityCheck } = flags.parse(Deno.args);
+const { d, v, doSanityCheck, persist } = flags.parse(Deno.args);
 if (!d) throw new Error("Please provide dependency name");
 
 await getSpinner().start(blue(`Analyzing ${d}${v ? `@${v}` : ""}`));
@@ -15,14 +15,27 @@ if (doSanityCheck) {
   await sanityCheck(R);
 }
 
-await getSpinner().succeed(green(`Analyzed ${R.name}@${R.version}, prepared the following registry entry:`));
+await getSpinner().succeed(green(`Analyzed ${R.name}@${R.version}, prepared the following registry entry:\n`));
 
-console.log(
-  JSON.stringify(
-    {
-      [`${R.name}@${R.version}`]: R,
-    },
-    null,
-    2
-  )
-);
+const newDep = {
+  [`${R.name}@${R.version}`]: R,
+};
+
+console.log(JSON.stringify(newDep, null, 2));
+
+if (persist) {
+  const X = JSON.parse(await Deno.readTextFile("registry.json"));
+  await Deno.writeTextFile(
+    "registry.json",
+    JSON.stringify(
+      {
+        ...X,
+        ...newDep,
+      },
+      null,
+      2
+    )
+  );
+
+  Deno.exit(0);
+}

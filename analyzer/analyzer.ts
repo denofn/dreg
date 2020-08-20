@@ -26,14 +26,20 @@ export async function analyze(d: string, v?: string): Promise<RegistryEntryV1> {
   }
 
   const depMap = getDependencyMap(pj);
-  if (Object.keys(depMap).length === 0) R.update({ npmDeps: {} });
 
   const { entry, typesEntry } = getEntry(pj, R);
   R.update({ entry, typesEntry });
 
-  const entryFileUrl = new URL(path.join(jsdelivr("npm"), path.join(`${R.name!}@${R.version!}`, R.entryFile!))).href;
-  const { npmDeps, localDeps, nativeDeps } = await diveFile(entryFileUrl, depMap);
-  R.update({ npmDeps, localDeps, nativeDeps });
+  const packName = `${R.name!}@${R.version!}`;
+  const entryFileUrl = new URL(path.join(jsdelivr("npm"), path.join(packName, R.entryFile!))).href;
+  const rewrites = await diveFile(entryFileUrl, depMap);
+  R.update({ rewrites });
+
+  if (!!R.typesEntry) {
+    const typesEntryFileUrl = new URL(path.join(jsdelivr("npm"), path.join(packName, R.typesEntry))).href;
+    const typeDeps = await diveFile(typesEntryFileUrl, depMap);
+    R.updateTypeRewrites = typeDeps;
+  }
 
   if (!R.entry) throw new Error("Info incomplete, quitting");
   return R.entry;

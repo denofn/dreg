@@ -1,20 +1,33 @@
 import { parse, path, blue } from "./deps.ts";
-import { RegistryEntryV1 } from "../runtime/types/registry.ts";
+import { Rewrites } from "../runtime/types/registry.ts";
+import { keys } from "../runtime/runtimeRegistry.ts";
 import { determineLocalDepExtension } from "../utils/determineLocalDepExtension.ts";
 import { esmSyntaxType } from "../utils/esmSyntaxNodes.ts";
 import { getSpinner } from "./spinner.ts";
 
-type DiveResult = Partial<Pick<RegistryEntryV1, "npmDeps" | "nativeDeps" | "localDeps">>;
+function encodeDepValue(q: string, dep: string): string {
+  return `${q}${dep}${q}`;
+}
 
-export async function diveFile(filePath: string, depMap: Record<string, string>): Promise<DiveResult> {
+function calculateFullModuleName(depMap: Record<string, string>, sourceValue: string) {
+  let fullName;
+
+  if (!!depMap[sourceValue]) fullName = sourceValue;
+  else if (!!depMap[`@types/${sourceValue}`]) fullName = `@types/${sourceValue}`;
+  else throw new Error();
+
+  const depName = `${fullName}@${depMap[fullName!]}`;
+
+  if (!keys.includes(depName)) throw new Error();
+
+  return `/package/${depName}`;
+}
+
+export async function diveFile(filePath: string, depMap: Record<string, string>): Promise<Rewrites> {
   await getSpinner().setText(blue(`Checking: ${filePath}`));
 
-  const diveResult: DiveResult = {
-    npmDeps: {},
-    nativeDeps: [],
-    localDeps: {
-      [filePath]: {},
-    },
+  let rewrites: Rewrites = {
+    [filePath]: {},
   };
 
   const fetchFileResult = await fetch(filePath);
@@ -22,6 +35,7 @@ export async function diveFile(filePath: string, depMap: Record<string, string>)
 
   const { body: parsedFileBody } = parse(file, {
     sourceType: "module",
+    range: true,
   });
 
   for (const node of parsedFileBody) {
@@ -29,31 +43,30 @@ export async function diveFile(filePath: string, depMap: Record<string, string>)
     if (node?.exportKind !== "value" && node?.importKind !== "value") continue;
 
     const source: string | undefined = node.source?.raw;
+    const sourceValue: string | undefined = node.source?.value;
 
-    if (!source) continue;
-    if (!source[1].startsWith(".")) continue;
-    else {
-      const [rawSource, resolvedSource] = await determineLocalDepExtension(filePath, source);
-      (diveResult.localDeps as Record<string, Record<string, string>>)[filePath][source] = rawSource;
+    if (!sourceValue) continue;
+
+    const q = source![0];
+
+    if (!sourceValue[0].startsWith(".")) {
+      const resolvedSource = calculateFullModuleName(depMap, sourceValue);
+      (rewrites as Record<string, Record<string, string>>)[filePath][source!] = encodeDepValue(q, resolvedSource);
+    } else {
+      const resolvedSource = await determineLocalDepExtension(filePath, sourceValue!);
+      (rewrites as Record<string, Record<string, string>>)[filePath][source!] = encodeDepValue(q, resolvedSource);
 
       const resolvedUrl = new URL(filePath);
       resolvedUrl.pathname = path.join(path.parse(resolvedUrl.pathname).dir, resolvedSource);
 
       const resolvedDive = await diveFile(resolvedUrl.href, depMap);
 
-      diveResult.localDeps = {
-        ...diveResult.localDeps,
-        ...resolvedDive.localDeps,
+      rewrites = {
+        ...rewrites,
+        ...resolvedDive,
       };
-
-      diveResult.npmDeps = {
-        ...diveResult.npmDeps,
-        ...resolvedDive.npmDeps,
-      };
-
-      diveResult.nativeDeps = [...diveResult.nativeDeps!, ...resolvedDive.nativeDeps!];
     }
   }
 
-  return diveResult;
+  return rewrites;
 }

@@ -4,4 +4,4 @@ export { red, green, bold, yellow, blue } from "https://deno.land/std@0.65.0/fmt
 export * as flags from "https://deno.land/std@0.65.0/flags/mod.ts";
 export * as path from "https://deno.land/std@0.65.0/path/mod.ts";
 
-export * as typefest from "https://deno.land/x/typefest@0.16.0/mod.ts";
+export { PackageJson } from "https://cdn.dreg.dev/package/type-fest@0.16.0/source/package-json.d.ts";

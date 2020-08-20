@@ -1,17 +1,20 @@
-import { typefest } from "./deps.ts";
+import type { PackageJson } from "./deps.ts";
 
-export function getDependencyMap(pj: typefest.PackageJson): Record<string, string> {
+export function getDependencyMap(pj: PackageJson): Record<string, string> {
   const depMap: Record<string, string> = {};
   const deps = pj.dependencies ?? {};
-  // types can live in devDependencies in some projects
   const devDeps = pj.devDependencies ?? {};
 
   for (const dep in deps) {
-    depMap[dep] = deps[dep];
+    const v = deps[dep];
+    depMap[dep] = v.startsWith("~") || v.startsWith("^") ? v.substr(1) : v;
   }
 
   for (const dep in devDeps) {
-    if (!depMap[dep]) depMap[dep] = devDeps[dep];
+    if (!depMap[dep]) {
+      const v = devDeps[dep];
+      depMap[dep] = v.startsWith("~") || v.startsWith("^") ? v.substr(1) : v;
+    }
   }
 
   return depMap;
