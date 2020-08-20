@@ -28,13 +28,13 @@ export async function diveFile(filePath: string, depMap: Record<string, string>)
     if (esmSyntaxType(node.type) !== "export" && esmSyntaxType(node.type) !== "import") continue;
     if (node?.exportKind !== "value" && node?.importKind !== "value") continue;
 
-    const source: string | undefined = node.source?.value;
+    const source: string | undefined = node.source?.raw;
 
     if (!source) continue;
-    if (!source.startsWith(".")) continue;
+    if (!source[1].startsWith(".")) continue;
     else {
-      const resolvedSource = await determineLocalDepExtension(filePath, source);
-      (diveResult.localDeps as Record<string, Record<string, string>>)[filePath][source] = resolvedSource;
+      const [rawSource, resolvedSource] = await determineLocalDepExtension(filePath, source);
+      (diveResult.localDeps as Record<string, Record<string, string>>)[filePath][source] = rawSource;
 
       const resolvedUrl = new URL(filePath);
       resolvedUrl.pathname = path.join(path.parse(resolvedUrl.pathname).dir, resolvedSource);
