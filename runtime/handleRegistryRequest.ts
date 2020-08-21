@@ -30,7 +30,10 @@ export default async (context: any) => {
   } else if (noSource && registryEntry.typesEntry!) {
     context.response.headers.set(
       "x-typescript-types",
-      path.join(context.request.url.pathname, registryEntry.typesEntry!)
+      registryEntry.importStrategy === "jspm"
+        ? registryEntry.typesEntry
+        : path.join(context.request.url.pathname, registryEntry.typesEntry!)
+      // path.join(context.request.url.pathname, registryEntry.typesEntry!)
     );
   }
 

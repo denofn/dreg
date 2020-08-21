@@ -1,6 +1,6 @@
 scripts:
   analyzer: deno run --unstable --allow-net --allow-run --allow-read=. --allow-write=. analyzer/mod.ts
   generate: deno run --allow-read=./registry.json --allow-write=./registry.ts scripts/generateRegistryTs.ts
-  serve: deno run --allow-net server.ts
+  serve: deno run --allow-net --allow-read=./polyfill server.ts
   deployProd: flyctl deploy  -c fly.prod.toml
   deployDev: flyctl deploy

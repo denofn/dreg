@@ -18,8 +18,8 @@ export async function sanityCheck(R: RegistryEntryV1) {
     cmd: ["deno", "run", cisPath],
   });
 
-  await Deno.writeTextFile(cisPath, "");
-
   await p.status();
   p.close();
+
+  await Deno.writeTextFile(cisPath, "");
 }
