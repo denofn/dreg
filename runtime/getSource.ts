@@ -17,12 +17,11 @@ export async function getSource(
     case "jsdelivr":
       return getJsdelivrSource(reqUrl, registryEntry, packageName, filePath);
     case "jspm":
-      return getJspmSource(reqUrl, registryEntry, packageName, filePath);
+      return getJspmSource(registryEntry, packageName, filePath);
   }
 }
 
 export async function getJspmSource(
-  reqUrl: string,
   registryEntry: RegistryEntryV1,
   packageName: string,
   filePath?: string

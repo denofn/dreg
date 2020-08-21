@@ -186,5 +186,25 @@
       }
     },
     "hasDefaultExport": true
+  },
+  "@rollup/pluginutils@4.0.0": {
+    "name": "@rollup/pluginutils",
+    "importStrategy": "jsdelivr",
+    "importType": "npm",
+    "isAtTypes": false,
+    "version": "4.0.0",
+    "description": "A set of utility functions commonly used by Rollup plugins",
+    "entry": "./dist/es/index.js",
+    "typesEntry": "types/index.d.ts",
+    "rewrites": {
+      "https://cdn.jsdelivr.net/npm/@rollup/pluginutils@4.0.0/dist/es/index.js": {
+        "'path'": "'/polyfill/node/path.ts'",
+        "'picomatch'": "'/package/picomatch@2.2.2'"
+      },
+      "https://cdn.jsdelivr.net/npm/@rollup/pluginutils@4.0.0/types/index.d.ts": {
+        "'estree'": "'/package/@types/estree@0.0.45'"
+      }
+    },
+    "hasDefaultExport": true
   }
 }
