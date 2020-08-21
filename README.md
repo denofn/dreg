@@ -1,55 +1,33 @@
 <p align="center">
    <img src="https://github.com/denofn/dreg/raw/main/.github/dreg_logo_transparent.png" alt="dreg logo" />
 </p>
-<p align="center"><i>A safe registry for importing NPM packages in Deno as ES Modules</i></p>
+<p align="center"><code>https://cdn.dreg.dev/package/PACKAGENAME@VERSION</code></p>
+<p align="center"><i>A safe registry for importing NPM packages in Deno as ES Modules.</i></p>
 
 ---
 
-> dreg? no no it's pronounced dee-reg.
+This project spawned as a necessary tool for [denopack](https://github.com/denofn/denopack) to use predefined Rollup plugins. The goal is to be as generic as possible and to only use a target like jspm/skypack with transpile cjs bundles when it's absolutely necessary. Primary target for proxying is jsdelivr, with automatic rewrites happening in the runtime.
 
-## Goal
+This registry follows the same principles as deno.land/x and nest.land - only versioned packages are allowed. You can check available packages in [registry.json](./registry.json).
 
-We want dreg to become a safe registry to import NPM packages in Deno, without having to use the `std/node/module.ts` functionality.
+## Analyzer
 
-_Wait, what's wrong with that?_
+The analyzer currently creates the registry entries for `registry.json`. The best way to use it currently would be to clone the project and - assuming you're using Velociraptor - run `vr analyzer -d <packageName>`.
 
-Nothing, but we shouldn't have to use a node_modules. `std/node/module.ts` works for local files, but not for urls and bypasses the compiler fetching and checking it beforehand. The latter is a big dealbreaker for this project.
+Available flags:
 
-_So, how are you going to do this then?_
+- `-d <name>`: package name
+- `-v <version>`: predefined version to check. Not using this flag means analyzer will check the latest available version.
+- `--doSanityCheck`: spot potential compiler errors
+- `--persist`: writes to `registry.json`. Run `vr generate` afterwards to persist in `registry.ts` as well
 
-Short term:
+## Runtime
 
-- analyze an npm package's **source code** entry point (this is a **major win** if the source is Typescript or ESM!)
-- transpile extension-less imports to extension-rich imports
-- vet packages and store in a registry database (much like deno.land/x/ does it right now)
-- serve on an edge CDN
-- fallback to jspm/skypack with types attached
-- improve analysis to also start from npm package name (to streamline vetting)
+The backbone for the CDN. Code is loaded and rewritten ad-hoc thanks to the registry.
 
-Long term:
+## Loading in types
 
-- transpile cjs to esm
-- allow resolving from unpkg or jsdelivr/npm (compiled npm packages) in addition to jsdelivr/gh
-
-## Checklist
-
-- [x] add script to analyze if code file is a(n) (es) module
-
-run from URL:
-
-```
-deno run --unstable --allow-net https://cdn.jsdelivr.net/gh/denofn/dreg@latest/analyzer/mod.ts urlToFile[.js|.ts|.tsx|.jsx|.d.ts]
-```
-
-or clone and use Velociraptor:
-
-```sh
-git clone https://github.com/denofn/dreg && cd dreg;
-vr start urlToFile[.js|.ts|.tsx|.jsx|.d.ts];
-```
-
-- [ ] transpile extensionless node module syntax to extension-rich esm (typescript or rollup)
-- [ ] set up registry.json and host endpoint on fly.io
+Failures on loading dependencies from dreg can sometimes be resolved with running `--no-check` the first time a package is loaded. This is a known issue that has been logged on Deno's Github page: https://github.com/denoland/deno/issues/7145
 
 ## Acknowledgements
 
