@@ -53,7 +53,7 @@ async function handleDive(
     const [rewrites, hasDefaultExport] = await diveFile(entryFileUrl, depMap);
     return { rewrites, hasDefaultExport };
   } catch (e) {
-    if (e?.message !== "CJS syntax detected, quitting") throw new Error(e);
+    if (e?.message !== "CJS syntax detected, quitting") throw new Error(e.message);
     const jspmEntryFile = new URL(`${jspm}${packName}!cjs`).href;
     const [rewrites, hasDefaultExport] = await diveFile(jspmEntryFile, {});
     return {
