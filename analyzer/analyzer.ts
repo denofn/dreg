@@ -8,15 +8,17 @@ import { diveFile } from "./diveFile.ts";
 import { getEntry } from "./getEntry.ts";
 import { getSpinner } from "./spinner.ts";
 
-export async function analyze(d: string, v?: string): Promise<RegistryEntryV1> {
+export async function analyze(d: string, v?: string, isJspm?: boolean, ghUser?: string): Promise<RegistryEntryV1> {
+  const jsdelivrSrc = !!ghUser ? `${jsdelivr("gh")}/${ghUser}` : jsdelivr("npm");
   const R = new RegistryEntryGenerator({
     name: d,
     importStrategy: "jsdelivr",
-    importType: "npm",
+    importType: !!ghUser ? "gh" : "npm",
+    ghUser: ghUser ?? undefined,
     isAtTypes: (d as string).startsWith("@types/"),
   });
 
-  const fetchUrl = !v ? path.join(jsdelivr("npm"), d) : path.join(jsdelivr("npm"), `${d}@${v}`);
+  const fetchUrl = !v ? path.join(jsdelivrSrc, d) : path.join(jsdelivrSrc, `${d}@${v}`);
   const [pjUrl, pj] = await fetchPj(fetchUrl);
 
   if (v) R.update({ version: v, description: pj.description ?? "" });
@@ -31,11 +33,11 @@ export async function analyze(d: string, v?: string): Promise<RegistryEntryV1> {
   R.update({ entry, typesEntry });
 
   const packName = `${R.name!}@${R.version!}`;
-  const entryFileUrl = new URL(path.join(jsdelivr("npm"), path.join(packName, R.entryFile!))).href;
-  R.update(await handleDive(entryFileUrl, depMap, packName));
+  const entryFileUrl = new URL(path.join(jsdelivrSrc, path.join(packName, R.entryFile!))).href;
+  R.update(await handleDive(entryFileUrl, depMap, packName, isJspm));
 
   if (!!R.typesEntry) {
-    const typesEntryFileUrl = new URL(path.join(jsdelivr("npm"), path.join(packName, R.typesEntry))).href;
+    const typesEntryFileUrl = new URL(path.join(jsdelivrSrc, path.join(packName, R.typesEntry))).href;
     const [typeDeps] = await diveFile(typesEntryFileUrl, depMap);
     R.updateTypeRewrites = typeDeps;
   }
@@ -47,9 +49,12 @@ export async function analyze(d: string, v?: string): Promise<RegistryEntryV1> {
 async function handleDive(
   entryFileUrl: string,
   depMap: Record<string, string>,
-  packName: string
+  packName: string,
+  isJspm?: boolean
 ): Promise<Partial<RegistryEntryV1>> {
   try {
+    if (isJspm) throw new Error("CJS syntax detected, quitting");
+
     const [rewrites, hasDefaultExport] = await diveFile(entryFileUrl, depMap);
     return { rewrites, hasDefaultExport };
   } catch (e) {

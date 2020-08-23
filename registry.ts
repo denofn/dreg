@@ -207,6 +207,319 @@ const registry: Registry = {
       }
     },
     "hasDefaultExport": true
+  },
+  "source-map@0.6.1": {
+    "name": "source-map",
+    "importStrategy": "jspm",
+    "importType": "npm",
+    "isAtTypes": false,
+    "version": "0.6.1",
+    "description": "Generates and consumes source maps",
+    "entry": "https://jspm.dev/npm:source-map@0.6.1!cjs",
+    "typesEntry": "/package/source-map@0.6.1/source-map.d.ts",
+    "rewrites": {
+      "https://jspm.dev/npm:source-map@0.6.1!cjs": {
+        "'./npm:source-map@0.6.1/_/b1dbe139.js'": "'/package/source-map@0.6.1/_/b1dbe139.js'",
+        "'./npm:source-map@0.6.1/lib/util!cjs'": "'/package/source-map@0.6.1/lib/util!cjs'",
+        "'./npm:source-map@0.6.1/lib/source-map-generator!cjs'": "'/package/source-map@0.6.1/lib/source-map-generator!cjs'",
+        "'./npm:source-map@0.6.1/lib/source-map-consumer!cjs'": "'/package/source-map@0.6.1/lib/source-map-consumer!cjs'"
+      },
+      "https://jspm.dev/npm:source-map@0.6.1/_/b1dbe139.js": {
+        "'../lib/util!cjs'": "'../lib/util!cjs'"
+      },
+      "https://jspm.dev/npm:source-map@0.6.1/lib/util!cjs": {},
+      "https://jspm.dev/npm:source-map@0.6.1/lib/source-map-generator!cjs": {
+        "'../_/b1dbe139.js'": "'../_/b1dbe139.js'",
+        "'./util!cjs'": "'./util!cjs'"
+      },
+      "https://jspm.dev/npm:source-map@0.6.1/lib/source-map-consumer!cjs": {
+        "'../_/b1dbe139.js'": "'../_/b1dbe139.js'",
+        "'./util!cjs'": "'./util!cjs'"
+      },
+      "https://cdn.jsdelivr.net/npm/source-map@0.6.1/source-map.d.ts": {}
+    },
+    "hasDefaultExport": true
+  },
+  "postcss@7.0.32": {
+    "name": "postcss",
+    "importStrategy": "jsdelivr",
+    "importType": "gh",
+    "ghUser": "postcss",
+    "isAtTypes": false,
+    "version": "7.0.32",
+    "description": "Tool for transforming styles with JS plugins",
+    "entry": "lib/postcss.es6",
+    "typesEntry": "lib/postcss.d.ts",
+    "rewrites": {
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.32/lib/postcss.es6": {
+        "'./declaration'": "'./declaration.es6'",
+        "'./processor'": "'./processor.es6'",
+        "'./stringify'": "'./stringify.es6'",
+        "'./comment'": "'./comment.es6'",
+        "'./at-rule'": "'./at-rule.es6'",
+        "'./vendor'": "'./vendor.es6'",
+        "'./parse'": "'./parse.es6'",
+        "'./list'": "'./list.es6'",
+        "'./rule'": "'./rule.es6'",
+        "'./root'": "'./root.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.32/lib/declaration.es6": {
+        "'./node'": "'./node.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.32/lib/node.es6": {
+        "'./css-syntax-error'": "'./css-syntax-error.es6'",
+        "'./stringifier'": "'./stringifier.es6'",
+        "'./stringify'": "'./stringify.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.32/lib/css-syntax-error.es6": {
+        "'supports-color'": "'/polyfill/node/supports-color.ts'",
+        "'chalk'": "'/polyfill/node/chalk.ts'",
+        "'./terminal-highlight'": "'./terminal-highlight.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.32/lib/terminal-highlight.es6": {
+        "'chalk'": "'/polyfill/node/chalk.ts'",
+        "'./tokenize'": "'./tokenize.es6'",
+        "'./input'": "'./input.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.32/lib/tokenize.es6": {},
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.32/lib/input.es6": {
+        "'path'": "'/polyfill/node/path.ts'",
+        "'./css-syntax-error'": "'./css-syntax-error.es6'",
+        "'./previous-map'": "'./previous-map.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.32/lib/previous-map.es6": {
+        "'source-map'": "'/package/source-map@0.6.1'",
+        "'path'": "'/polyfill/node/path.ts'",
+        "'fs'": "'/polyfill/node/fs.ts'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.32/lib/stringifier.es6": {},
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.32/lib/stringify.es6": {
+        "'./stringifier'": "'./stringifier.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.32/lib/processor.es6": {
+        "'./lazy-result'": "'./lazy-result.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.32/lib/lazy-result.es6": {
+        "'./map-generator'": "'./map-generator.es6'",
+        "'./stringify'": "'./stringify.es6'",
+        "'./warn-once'": "'./warn-once.es6'",
+        "'./result'": "'./result.es6'",
+        "'./parse'": "'./parse.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.32/lib/map-generator.es6": {
+        "'source-map'": "'/package/source-map@0.6.1'",
+        "'path'": "'/polyfill/node/path.ts'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.32/lib/warn-once.es6": {},
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.32/lib/result.es6": {
+        "'./warning'": "'./warning.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.32/lib/warning.es6": {},
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.32/lib/parse.es6": {
+        "'./parser'": "'./parser.es6'",
+        "'./input'": "'./input.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.32/lib/parser.es6": {
+        "'./declaration'": "'./declaration.es6'",
+        "'./tokenize'": "'./tokenize.es6'",
+        "'./comment'": "'./comment.es6'",
+        "'./at-rule'": "'./at-rule.es6'",
+        "'./root'": "'./root.es6'",
+        "'./rule'": "'./rule.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.32/lib/comment.es6": {
+        "'./node'": "'./node.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.32/lib/at-rule.es6": {
+        "'./container'": "'./container.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.32/lib/container.es6": {
+        "'./declaration'": "'./declaration.es6'",
+        "'./comment'": "'./comment.es6'",
+        "'./node'": "'./node.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.32/lib/root.es6": {
+        "'./container'": "'./container.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.32/lib/rule.es6": {
+        "'./container'": "'./container.es6'",
+        "'./list'": "'./list.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.32/lib/list.es6": {},
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.32/lib/vendor.es6": {},
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.32/lib/postcss.d.ts": {
+        "'source-map'": "'/package/source-map@0.6.1'",
+        "dregExportAssignment:postcss": ""
+      }
+    },
+    "hasDefaultExport": true,
+    "addProcess": true
+  },
+  "postcss-value-parser@4.1.0": {
+    "name": "postcss-value-parser",
+    "importStrategy": "jspm",
+    "importType": "npm",
+    "isAtTypes": false,
+    "version": "4.1.0",
+    "typesEntry": "/package/postcss-value-parser@4.1.0/lib/index.d.ts",
+    "description": "Transforms css values and at-rule params into the tree",
+    "entry": "https://jspm.dev/npm:postcss-value-parser@4.1.0!cjs",
+    "rewrites": {
+      "https://jspm.dev/npm:postcss-value-parser@4.1.0!cjs": {
+        "'./npm:postcss-value-parser@4.1.0/lib/unit!cjs'": "'/package/postcss-value-parser@4.1.0/lib/unit!cjs'"
+      },
+      "https://jspm.dev/npm:postcss-value-parser@4.1.0/lib/unit!cjs": {},
+      "https://cdn.jsdelivr.net/npm/postcss-value-parser@4.1.0/lib/index.d.ts": {
+        "dregExportAssignment:postcssValueParser": ""
+      }
+    },
+    "hasDefaultExport": true
+  },
+  "postcss@7.0.16": {
+    "name": "postcss",
+    "importStrategy": "jsdelivr",
+    "importType": "gh",
+    "ghUser": "postcss",
+    "isAtTypes": false,
+    "version": "7.0.16",
+    "description": "Tool for transforming styles with JS plugins",
+    "entry": "lib/postcss.es6",
+    "typesEntry": "lib/postcss.d.ts",
+    "rewrites": {
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.16/lib/postcss.es6": {
+        "'./declaration'": "'./declaration.es6'",
+        "'./processor'": "'./processor.es6'",
+        "'./stringify'": "'./stringify.es6'",
+        "'./comment'": "'./comment.es6'",
+        "'./at-rule'": "'./at-rule.es6'",
+        "'./vendor'": "'./vendor.es6'",
+        "'./parse'": "'./parse.es6'",
+        "'./list'": "'./list.es6'",
+        "'./rule'": "'./rule.es6'",
+        "'./root'": "'./root.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.16/lib/declaration.es6": {
+        "'./node'": "'./node.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.16/lib/node.es6": {
+        "'./css-syntax-error'": "'./css-syntax-error.es6'",
+        "'./stringifier'": "'./stringifier.es6'",
+        "'./stringify'": "'./stringify.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.16/lib/css-syntax-error.es6": {
+        "'supports-color'": "'/polyfill/node/supports-color.ts'",
+        "'chalk'": "'/polyfill/node/chalk.ts'",
+        "'./terminal-highlight'": "'./terminal-highlight.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.16/lib/terminal-highlight.es6": {
+        "'chalk'": "'/polyfill/node/chalk.ts'",
+        "'./tokenize'": "'./tokenize.es6'",
+        "'./input'": "'./input.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.16/lib/tokenize.es6": {},
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.16/lib/input.es6": {
+        "'path'": "'/polyfill/node/path.ts'",
+        "'./css-syntax-error'": "'./css-syntax-error.es6'",
+        "'./previous-map'": "'./previous-map.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.16/lib/previous-map.es6": {
+        "'source-map'": "'/package/source-map@0.6.1'",
+        "'path'": "'/polyfill/node/path.ts'",
+        "'fs'": "'/polyfill/node/fs.ts'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.16/lib/stringifier.es6": {},
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.16/lib/stringify.es6": {
+        "'./stringifier'": "'./stringifier.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.16/lib/processor.es6": {
+        "'./lazy-result'": "'./lazy-result.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.16/lib/lazy-result.es6": {
+        "'./map-generator'": "'./map-generator.es6'",
+        "'./stringify'": "'./stringify.es6'",
+        "'./warn-once'": "'./warn-once.es6'",
+        "'./result'": "'./result.es6'",
+        "'./parse'": "'./parse.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.16/lib/map-generator.es6": {
+        "'source-map'": "'/package/source-map@0.6.1'",
+        "'path'": "'/polyfill/node/path.ts'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.16/lib/warn-once.es6": {},
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.16/lib/result.es6": {
+        "'./warning'": "'./warning.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.16/lib/warning.es6": {},
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.16/lib/parse.es6": {
+        "'./parser'": "'./parser.es6'",
+        "'./input'": "'./input.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.16/lib/parser.es6": {
+        "'./declaration'": "'./declaration.es6'",
+        "'./tokenize'": "'./tokenize.es6'",
+        "'./comment'": "'./comment.es6'",
+        "'./at-rule'": "'./at-rule.es6'",
+        "'./root'": "'./root.es6'",
+        "'./rule'": "'./rule.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.16/lib/comment.es6": {
+        "'./node'": "'./node.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.16/lib/at-rule.es6": {
+        "'./container'": "'./container.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.16/lib/container.es6": {
+        "'./declaration'": "'./declaration.es6'",
+        "'./comment'": "'./comment.es6'",
+        "'./node'": "'./node.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.16/lib/root.es6": {
+        "'./container'": "'./container.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.16/lib/rule.es6": {
+        "'./container'": "'./container.es6'",
+        "'./list'": "'./list.es6'"
+      },
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.16/lib/list.es6": {},
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.16/lib/vendor.es6": {},
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.16/lib/postcss.d.ts": {
+        "'source-map'": "'/package/source-map@0.6.1'",
+        "dregExportAssignment:postcss": ""
+      }
+    },
+    "hasDefaultExport": true
+  },
+  "@types/browserslist@4.8.0": {
+    "name": "@types/browserslist",
+    "importStrategy": "jsdelivr",
+    "importType": "npm",
+    "isAtTypes": true,
+    "version": "4.8.0",
+    "description": "TypeScript definitions for browserslist",
+    "entry": "index.d.ts",
+    "rewrites": {
+      "https://cdn.jsdelivr.net/npm/@types/browserslist@4.8.0/index.d.ts": {
+        "dregExportAssignment:browserslist": ""
+      }
+    },
+    "hasDefaultExport": true
+  },
+  "@types/autoprefixer@9.7.2": {
+    "name": "@types/autoprefixer",
+    "importStrategy": "jsdelivr",
+    "importType": "npm",
+    "isAtTypes": true,
+    "version": "9.7.2",
+    "description": "TypeScript definitions for autoprefixer",
+    "entry": "index.d.ts",
+    "rewrites": {
+      "https://cdn.jsdelivr.net/npm/@types/autoprefixer@9.7.2/index.d.ts": {
+        "'postcss'": "'/package/postcss@7.0.32'",
+        "'browserslist'": "'/package/@types/browserslist@4.8.0'",
+        "dregExportAssignment:autoprefixer": ""
+      }
+    },
+    "hasDefaultExport": true
   }
 };
 export default registry;

@@ -21,6 +21,7 @@ export async function determineLocalDepExtension(base: string, importPath: strin
   resolvedBaseUrl.pathname = path.join(parsedBasePath.dir, importPath);
 
   if (!!path.parse(importPath).ext) return importPath;
+  if (await doesFileExist(resolvedBaseUrl.href)) return importPath;
 
   if (
     parsedBasePath.ext === ".ts" &&
@@ -28,6 +29,10 @@ export async function determineLocalDepExtension(base: string, importPath: strin
     (await doesFileExist(`${resolvedBaseUrl}.d.ts`))
   )
     return `${importPath}.d.ts`;
+  if (jsExtensions.includes(parsedBasePath.ext) && (await doesFileExist(`${resolvedBaseUrl}${parsedBasePath.ext}`)))
+    return `${importPath}${parsedBasePath.ext}`;
+
+  if (await doesFileExist(`${resolvedBaseUrl}.js`)) return `${importPath}.js`;
 
   throw new Error("Could not resolve extension, quitting");
 }
