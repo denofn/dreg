@@ -12,6 +12,7 @@ export type RegistryEntryV1 = {
   addProcess?: boolean;
   ghUser?: string;
   rewrites: Rewrites;
+  additions?: Record<string, string[]>;
   hasDefaultExport: boolean;
 };
 

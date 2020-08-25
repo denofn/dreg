@@ -80,6 +80,7 @@ export async function getJsdelivrSource(
     )
   ).href;
   const localRewrites = registryEntry.rewrites[fileURL];
+  const localAdditions = registryEntry.additions?.[fileURL] ?? [];
   if (!localRewrites) return ["", ""];
 
   const result = await fetch(fileURL);
@@ -93,6 +94,10 @@ export async function getJsdelivrSource(
     } else if (k.startsWith(exportAssignment)) {
       resultText = replaceExportAssignment(resultText, k.substr(exportAssignment.length));
     } else resultText = resultText.replaceAll(k, localRewrites[k]);
+  }
+
+  for (const a of localAdditions) {
+    resultText += `\n${a}\n`;
   }
 
   return [resultText, fileURL];
