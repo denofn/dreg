@@ -512,9 +512,7 @@
       }
     },
     "additions": {
-      "https://cdn.jsdelivr.net/npm/@types/browserslist@4.8.0/index.d.ts": [
-        "export type Stats = browserslist.Stats;"
-      ]
+      "https://cdn.jsdelivr.net/npm/@types/browserslist@4.8.0/index.d.ts": ["export type Stats = browserslist.Stats;"]
     },
     "hasDefaultExport": true
   },
@@ -547,6 +545,49 @@
       "https://cdn.jsdelivr.net/npm/@types/cssnano@4.0.0/index.d.ts": {
         "'postcss'": "'/package/postcss@7.0.32'",
         "dregExportAssignment:cssnano": ""
+      }
+    },
+    "hasDefaultExport": true
+  },
+  "vue@2.6.12": {
+    "name": "vue",
+    "importStrategy": "jspm",
+    "importType": "npm",
+    "isAtTypes": false,
+    "version": "2.6.12",
+    "description": "Reactive, component-oriented view layer for modern web interfaces.",
+    "entry": "https://jspm.dev/npm:vue@2.6.12!cjs",
+    "typesEntry": "/package/vue@2.6.12/types/index.d.ts",
+    "rewrites": {
+      "https://jspm.dev/npm:vue@2.6.12!cjs": {
+        "'/npm:@jspm/core@2/nodelibs/process'": "'/polyfill/node/process.ts'"
+      },
+      "https://cdn.jsdelivr.net/npm/vue@2.6.12/types/index.d.ts": {
+        "\"./vue\"": "\"./vue.d.ts\"",
+        "\"./umd\"": "\"./umd.d.ts\"",
+        "\"./options\"": "\"./options.d.ts\"",
+        "\"./plugin\"": "\"./plugin.d.ts\"",
+        "\"./vnode\"": "\"./vnode.d.ts\""
+      },
+      "https://cdn.jsdelivr.net/npm/vue@2.6.12/types/vue.d.ts": {
+        "\"./options\"": "\"./options.d.ts\"",
+        "\"./vnode\"": "\"./vnode.d.ts\"",
+        "\"./plugin\"": "\"./plugin.d.ts\""
+      },
+      "https://cdn.jsdelivr.net/npm/vue@2.6.12/types/options.d.ts": {
+        "\"./vue\"": "\"./vue.d.ts\"",
+        "\"./vnode\"": "\"./vnode.d.ts\""
+      },
+      "https://cdn.jsdelivr.net/npm/vue@2.6.12/types/vnode.d.ts": {
+        "\"./vue\"": "\"./vue.d.ts\""
+      },
+      "https://cdn.jsdelivr.net/npm/vue@2.6.12/types/plugin.d.ts": {
+        "\"./vue\"": "\"./vue.d.ts\""
+      },
+      "https://cdn.jsdelivr.net/npm/vue@2.6.12/types/umd.d.ts": {
+        "\"./index\"": "\"./index.d.ts\"",
+        "\"./options\"": "\"./options.d.ts\"",
+        "dregExportAssignment:Vue": ""
       }
     },
     "hasDefaultExport": true
