@@ -352,6 +352,11 @@ const registry: Registry = {
         "dregExportAssignment:postcss": ""
       }
     },
+    "additions": {
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.32/lib/postcss.d.ts": [
+        "export type Plugin<T> = postcss.Plugin<T>;"
+      ]
+    },
     "hasDefaultExport": true,
     "addProcess": true
   },
@@ -487,6 +492,11 @@ const registry: Registry = {
         "dregExportAssignment:postcss": ""
       }
     },
+    "additions": {
+      "https://cdn.jsdelivr.net/gh/postcss/postcss@7.0.16/lib/postcss.d.ts": [
+        "export type Plugin<T> = postcss.Plugin<T>;"
+      ]
+    },
     "hasDefaultExport": true
   },
   "@types/browserslist@4.8.0": {
@@ -502,6 +512,11 @@ const registry: Registry = {
         "dregExportAssignment:browserslist": ""
       }
     },
+    "additions": {
+      "https://cdn.jsdelivr.net/npm/@types/browserslist@4.8.0/index.d.ts": [
+        "export type Stats = browserslist.Stats;"
+      ]
+    },
     "hasDefaultExport": true
   },
   "@types/autoprefixer@9.7.2": {
@@ -514,9 +529,25 @@ const registry: Registry = {
     "entry": "index.d.ts",
     "rewrites": {
       "https://cdn.jsdelivr.net/npm/@types/autoprefixer@9.7.2/index.d.ts": {
-        "'postcss'": "'/package/postcss@7.0.32'",
-        "'browserslist'": "'/package/@types/browserslist@4.8.0'",
+        "'postcss'": "'/package/postcss@7.0.32/lib/postcss.d.ts'",
+        "'browserslist'": "'/package/@types/browserslist@4.8.0/index.d.ts'",
         "dregExportAssignment:autoprefixer": ""
+      }
+    },
+    "hasDefaultExport": true
+  },
+  "@types/cssnano@4.0.0": {
+    "name": "@types/cssnano",
+    "importStrategy": "jsdelivr",
+    "importType": "npm",
+    "isAtTypes": true,
+    "version": "4.0.0",
+    "description": "TypeScript definitions for cssnano",
+    "entry": "index.d.ts",
+    "rewrites": {
+      "https://cdn.jsdelivr.net/npm/@types/cssnano@4.0.0/index.d.ts": {
+        "'postcss'": "'/package/postcss@7.0.32'",
+        "dregExportAssignment:cssnano": ""
       }
     },
     "hasDefaultExport": true
