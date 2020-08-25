@@ -1,4 +1,5 @@
-export * from "https://deno.land/std@0.65.0/node/fs.ts";
+export * from "https://deno.land/std@0.66.0/node/fs.ts";
+import * as fs from "https://deno.land/std@0.66.0/node/fs.ts";
 
 type NodeStats = Omit<Deno.FileInfo, "isDirectory" | "isFile" | "isSymlink"> & {
   isDirectory(): boolean;
@@ -41,3 +42,11 @@ export async function realPath(path: string, callback: (err?: Error, stats?: str
     callback(e);
   }
 }
+
+export default {
+  ...fs,
+  statSync: statSync,
+  stat: stat,
+  realPathSync: realPathSync,
+  realPath: realPath,
+};

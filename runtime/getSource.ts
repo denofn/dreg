@@ -13,6 +13,7 @@ export async function getSource(
   packageName: string,
   filePath?: string
 ): Promise<[string, string]> {
+  if (reqUrl === registryEntry.typesEntry) return getJsdelivrSource(reqUrl, registryEntry, packageName, filePath);
   switch (registryEntry.importStrategy) {
     case "jsdelivr":
       return getJsdelivrSource(reqUrl, registryEntry, packageName, filePath);
@@ -61,14 +62,23 @@ export async function getJsdelivrSource(
 ): Promise<[string, string]> {
   if (typeof filePath === "undefined") {
     return [
-      `export * from "${path.join(reqUrl, registryEntry.entry)}";\n${
+      `${!!registryEntry.addProcess ? `import "/polyfill/node/process.ts";\n` : ""}export * from "${path.join(
+        reqUrl,
+        registryEntry.entry
+      )}";\n${
         registryEntry.hasDefaultExport ? `export { default } from "${path.join(reqUrl, registryEntry.entry)}";` : ""
       }`,
       registryEntry.entry,
     ];
   }
 
-  const fileURL = new URL(path.join(jsdelivr(registryEntry.importType), packageName, filePath)).href;
+  const fileURL = new URL(
+    path.join(
+      jsdelivr(registryEntry.importType),
+      registryEntry.importType === "gh" ? `${registryEntry.ghUser!}/${packageName}` : packageName,
+      filePath
+    )
+  ).href;
   const localRewrites = registryEntry.rewrites[fileURL];
   if (!localRewrites) return ["", ""];
 

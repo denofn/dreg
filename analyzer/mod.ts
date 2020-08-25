@@ -4,11 +4,11 @@ import { flags, blue, green } from "./deps.ts";
 import { sanityCheck } from "./sanityCheck.ts";
 import { getSpinner } from "./spinner.ts";
 
-const { d, v, doSanityCheck, persist } = flags.parse(Deno.args);
+const { d, v, doSanityCheck, persist, jspm, g } = flags.parse(Deno.args);
 if (!d) throw new Error("Please provide dependency name");
 
 await getSpinner().start(blue(`Analyzing ${d}${v ? `@${v}` : ""}`));
-const R: RegistryEntryV1 = await analyze(d, v);
+const R: RegistryEntryV1 = await analyze(d, v, !!jspm, g);
 
 if (doSanityCheck) {
   await getSpinner().setText(`Performing sanity check`);

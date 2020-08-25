@@ -8,7 +8,7 @@ type Params = {
   0?: string;
 };
 
-const availablePolyfills = ["path.ts", "process.ts"];
+const availablePolyfills = ["path.ts", "process.ts", "supports-color.ts", "chalk.ts", "fs.ts"];
 
 export default async (context: any) => {
   const params: Params = context.params;

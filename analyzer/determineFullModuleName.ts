@@ -2,7 +2,7 @@ import { keys } from "../runtime/runtimeRegistry.ts";
 
 const jspmBase = "/npm:@jspm/core@2/nodelibs/";
 const withJspmBase = (pack: string) => `${jspmBase}${pack}`;
-const internals = ["path", "process"];
+const internals = ["path", "process", "chalk", "supports-color", "fs"];
 
 export function determineFullModuleName(depMap: Record<string, string>, sourceValue: string) {
   if (internals.includes(sourceValue)) return `/polyfill/node/${sourceValue}.ts`;

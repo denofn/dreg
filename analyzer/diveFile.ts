@@ -4,12 +4,17 @@ import { determineLocalDepExtension } from "../utils/determineLocalDepExtension.
 import { determineFullModuleName } from "./determineFullModuleName.ts";
 import { esmSyntaxType } from "../utils/esmSyntaxNodes.ts";
 import { getSpinner } from "./spinner.ts";
+import { getReferences } from "./getReferences.ts";
 
 function encodeDepValue(q: string, dep: string): string {
   return `${q}${dep}${q}`;
 }
 
-export async function diveFile(filePath: string, depMap: Record<string, string>): Promise<[Rewrites, boolean]> {
+export async function diveFile(
+  filePath: string,
+  depMap: Record<string, string>,
+  parentRewrites?: Rewrites
+): Promise<[Rewrites, boolean]> {
   let hasDefaultExport = false;
 
   await getSpinner().setText(blue(`Checking: ${filePath}`));
@@ -21,12 +26,13 @@ export async function diveFile(filePath: string, depMap: Record<string, string>)
   const fetchFileResult = await fetch(filePath);
   const file = await fetchFileResult.text();
 
-  const { body: parsedFileBody } = parse(file, {
+  const { body: parsedFileBody, comments: parsedFileComments } = parse(file, {
     sourceType: "module",
     range: true,
+    comment: true,
   });
 
-  for (const node of parsedFileBody) {
+  for (const node of [...getReferences(parsedFileComments), ...parsedFileBody]) {
     if (!esmSyntaxType(node.type)) checkForCjsSyntax(node);
 
     // import require
@@ -39,6 +45,7 @@ export async function diveFile(filePath: string, depMap: Record<string, string>)
         source: `dregImportEquals:${raw}`,
         filePath,
         sourceValue,
+        parentRewrites,
       });
 
       rewrites = {
@@ -70,7 +77,16 @@ export async function diveFile(filePath: string, depMap: Record<string, string>)
     if (!sourceValue) continue;
 
     const q = source![0];
-    const resolvedEsmNode = await handleEsmSyntaxDeps({ rewrites, depMap, sourceValue, filePath, source: source!, q });
+
+    const resolvedEsmNode = await handleEsmSyntaxDeps({
+      rewrites,
+      depMap,
+      sourceValue,
+      filePath,
+      source: source!,
+      q,
+      parentRewrites,
+    });
 
     rewrites = {
       ...rewrites,
@@ -83,6 +99,7 @@ export async function diveFile(filePath: string, depMap: Record<string, string>)
 
 async function handleEsmSyntaxDeps({
   rewrites,
+  parentRewrites,
   depMap,
   sourceValue,
   filePath,
@@ -90,6 +107,7 @@ async function handleEsmSyntaxDeps({
   q,
 }: {
   rewrites: Rewrites;
+  parentRewrites?: Rewrites;
   depMap: Record<string, string>;
   sourceValue: string;
   filePath: string;
@@ -102,11 +120,12 @@ async function handleEsmSyntaxDeps({
     return rewrites;
   }
 
-  return resolveDive({ rewrites, depMap, sourceValue, filePath, source, q });
+  return resolveDive({ rewrites, depMap, sourceValue, filePath, source, q, parentRewrites });
 }
 
 async function resolveDive({
   rewrites,
+  parentRewrites,
   depMap,
   sourceValue,
   filePath,
@@ -114,6 +133,7 @@ async function resolveDive({
   q,
 }: {
   rewrites: Rewrites;
+  parentRewrites?: Rewrites;
   depMap: Record<string, string>;
   sourceValue: string;
   filePath: string;
@@ -129,12 +149,14 @@ async function resolveDive({
   const resolvedUrl = new URL(filePath);
   resolvedUrl.pathname = path.join(path.parse(resolvedUrl.pathname).dir, _resolvedSource);
 
-  const [resolvedDive] = await diveFile(resolvedUrl.href, depMap);
+  if (!rewrites[resolvedUrl.href] && !parentRewrites?.[resolvedUrl.href]) {
+    const [resolvedDive] = await diveFile(resolvedUrl.href, depMap, { ...(parentRewrites ?? {}), ...rewrites });
 
-  rewrites = {
-    ...rewrites,
-    ...resolvedDive,
-  };
+    rewrites = {
+      ...rewrites,
+      ...resolvedDive,
+    };
+  }
 
   return rewrites;
 }

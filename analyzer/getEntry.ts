@@ -15,6 +15,8 @@ export function getEntry(pj: PackageJson, _e: RegistryEntryGenerator): { entry: 
   else result = { entry: pj.main };
 
   if (typeof pj.types === "string") result.typesEntry = pj.types!;
+  if (typeof pj.typings === "string")
+    result.typesEntry = pj.typings!.endsWith(".d.ts") ? pj.typings : `${pj.typings}.d.ts`;
 
   return result;
 }
