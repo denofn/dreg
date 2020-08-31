@@ -561,7 +561,8 @@ const registry: Registry = {
     "typesEntry": "/package/vue@2.6.12/types/index.d.ts",
     "rewrites": {
       "https://jspm.dev/npm:vue@2.6.12!cjs": {
-        "'/npm:@jspm/core@2/nodelibs/process'": "'/polyfill/node/process.ts'"
+        "'/npm:@jspm/core@2/nodelibs/process'": "'/polyfill/node/process.ts'",
+        "var inBrowser = typeof window !== \"undefined\";": "var inBrowser = typeof window !== \"undefined\" && typeof window.Deno === \"undefined\";"
       },
       "https://cdn.jsdelivr.net/npm/vue@2.6.12/types/index.d.ts": {
         "\"./vue\"": "\"./vue.d.ts\"",
