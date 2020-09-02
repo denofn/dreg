@@ -1,7 +1,11 @@
-import { wait, blue } from "./deps.ts";
+import { setupPackageState } from "./setup.ts";
+import { spinner } from "./spinner.ts";
+import { blue } from "./deps.ts";
 
-const spinner = wait("Generating terrain").start();
+const state = await setupPackageState();
 
-setTimeout(() => {
-  spinner.text = blue("Loading dinosaurs");
-}, 1500);
+spinner.stopAndPersist({
+  text: blue("The package name is " + state.entry.name),
+});
+
+console.log(state.entry);

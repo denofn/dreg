@@ -29,7 +29,8 @@ export type RegistryEntryV2 = {
   ghInfo?: {
     user: string;
     repo: string;
-    entryFile?: string;
+    entryFile: string;
+    packageJsonLocation?: string;
   };
   rewrites: Rewrites;
   additions?: Record<string, string[]>;
