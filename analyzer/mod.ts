@@ -1,5 +1,6 @@
 import { setupPackageState } from "./setup.ts";
+import { state } from "./state.ts";
 
-const state = await setupPackageState();
+await setupPackageState();
 
-console.log(state.entry);
+console.log(state.getState());

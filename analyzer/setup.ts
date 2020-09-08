@@ -3,7 +3,7 @@ import { askGhInfo } from "./questions/ghInfo.ts";
 import { askImportType } from "./questions/importType.ts";
 import { askPackageName } from "./questions/packageName.ts";
 import { askVersion } from "./questions/version.ts";
-import { StateObject } from "./state.ts";
+import { bootstrapPackage } from "./state.ts";
 
 export async function setupPackageState({
   name: _name,
@@ -21,6 +21,5 @@ export async function setupPackageState({
 
   const version = _version ?? (await askVersion({ name, importType }));
 
-  const state = new StateObject({ name, importType, ghInfo, version });
-  return state;
+  bootstrapPackage({ entry: { name, importType, ghInfo, version }, depMap: {} });
 }
