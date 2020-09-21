@@ -1,8 +1,8 @@
 import { askGeneratePartialEntry } from "./questions/generatePartialEntry.ts";
+import { parseFlags, OptionType, Select, blue } from "./deps.ts";
 import { setupPackageState } from "./setup.ts";
-import { parseFlags, OptionType } from "./deps.ts";
 import { state } from "./state.ts";
-import type { RegistryEntryV2 } from "../runtime/types/registry.ts";
+import { parsePartialEntry } from "./parsePartial.ts";
 
 try {
   const flags = parseFlags(Deno.args, {
@@ -15,17 +15,11 @@ try {
     }],
   });
 
-  let partialEntry = {};
-  if (flags.flags.partial) {
-    try {
-      partialEntry = Object.values(
-        JSON.parse(await Deno.readTextFile(flags.flags.partial)),
-      )[0] as Partial<RegistryEntryV2>;
-    } catch {}
-  }
+  const partialEntry = await parsePartialEntry(flags.flags.partial);
+  await setupPackageState(partialEntry);
 
-  await setupPackageState(partialEntry); // TODO: handle partial entries with more than one package
   if (!flags.flags.partial) await askGeneratePartialEntry();
+
   console.log(state.getState());
 } catch {
   await askGeneratePartialEntry({ didSomethingHappen: true });
