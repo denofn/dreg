@@ -20,9 +20,12 @@ export const updateEntryValue = effector.createEvent();
 
 export const state = effector
   .createStore({} as Record<string, StateEntry>)
-  .on(bootstrapPackage, (state, payload: StateEntry) => {
-    return {
-      ...state,
-      [getStateKey(payload.entry)]: payload,
-    };
-  });
+  .on(
+    bootstrapPackage,
+    (state: Record<string, StateEntry>, payload: StateEntry) => {
+      return {
+        ...state,
+        [getStateKey(payload.entry)]: payload,
+      };
+    },
+  );
