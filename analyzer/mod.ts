@@ -1,6 +1,9 @@
+import { askGeneratePartialEntry } from "./questions/generatePartialEntry.ts";
 import { setupPackageState } from "./setup.ts";
-import { state } from "./state.ts";
 
-await setupPackageState();
-
-console.log(state.getState());
+try {
+  await setupPackageState();
+  await askGeneratePartialEntry();
+} catch {
+  await askGeneratePartialEntry({ didSomethingHappen: true });
+}

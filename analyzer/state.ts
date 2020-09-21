@@ -1,4 +1,4 @@
-import { RegistryEntryV2 } from "../runtime/types/registry.ts";
+import type { RegistryEntryV2 } from "../runtime/types/registry.ts";
 import { effector, hash } from "./deps.ts"; // TODO: use hash?
 
 type StateEntry = {
@@ -7,7 +7,9 @@ type StateEntry = {
 };
 
 export function getStateKey(entry: Partial<RegistryEntryV2>): string {
-  if (!entry.name || !entry.version) throw new Error("No name or version found");
+  if (!entry.name || !entry.version) {
+    throw new Error("No name or version found");
+  }
   return `${entry.name}@${entry.version}`;
 }
 

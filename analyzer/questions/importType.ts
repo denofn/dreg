@@ -1,4 +1,4 @@
-import { RegistryEntryV2 } from "../../runtime/types/registry.ts";
+import type { RegistryEntryV2 } from "../../runtime/types/registry.ts";
 import { blue, Select } from "../deps.ts";
 
 export async function askImportType(): Promise<RegistryEntryV2["importType"]> {

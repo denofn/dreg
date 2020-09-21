@@ -1,4 +1,4 @@
-import { RegistryEntryV2 } from "../runtime/types/registry.ts";
+import type { RegistryEntryV2 } from "../runtime/types/registry.ts";
 import { askGhInfo } from "./questions/ghInfo.ts";
 import { askImportType } from "./questions/importType.ts";
 import { askPackageName } from "./questions/packageName.ts";
@@ -21,5 +21,7 @@ export async function setupPackageState({
 
   const version = _version ?? (await askVersion({ name, importType }));
 
-  bootstrapPackage({ entry: { name, importType, ghInfo, version }, depMap: {} });
+  bootstrapPackage(
+    { entry: { name, importType, ghInfo, version }, depMap: {} },
+  );
 }
