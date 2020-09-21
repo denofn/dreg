@@ -13,18 +13,22 @@ export async function askGhInfo({
     ));
 
   let repo = _ghInfo?.repo ??
-    (await Input.prompt(
-      blue(`What is the repo name of ${name}? [leave blank for ${name}]`),
-    ));
+    (await Input.prompt({
+      message: blue(`What is the repo name of ${name}?`),
+      default: name,
+    }));
   if (repo === "") repo = name;
 
   let entryFile = _ghInfo?.entryFile ??
     (await Input.prompt(blue(`At what path is the entry file located?`)));
 
   let packageJsonLocation: string | undefined = _ghInfo?.packageJsonLocation ??
-    (await Input.prompt(
-      blue(`At what path is the package.json located? [leave blank for root]`),
-    ));
+    (await Input.prompt({
+      message: blue(
+        `At what path is the package.json located?`,
+      ),
+      default: ".",
+    }));
   if (packageJsonLocation === "") packageJsonLocation = undefined;
 
   return { user, repo, packageJsonLocation, entryFile };

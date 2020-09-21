@@ -23,3 +23,7 @@ export {
   Select,
   Confirm,
 } from "https://deno.land/x/cliffy@v0.14.1/prompt/mod.ts";
+export {
+  parseFlags,
+  OptionType,
+} from "https://deno.land/x/cliffy@v0.14.1/flags/mod.ts";
