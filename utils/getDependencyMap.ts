@@ -7,13 +7,13 @@ export function getDependencyMap(pj: PackageJson): Record<string, string> {
 
   for (const dep in deps) {
     const v = deps[dep];
-    depMap[dep] = v.startsWith("~") || v.startsWith("^") ? v.substr(1) : v;
+    depMap[dep] = v;
   }
 
   for (const dep in devDeps) {
     if (!depMap[dep]) {
       const v = devDeps[dep];
-      depMap[dep] = v.startsWith("~") || v.startsWith("^") ? v.substr(1) : v;
+      depMap[dep] = v;
     }
   }
 

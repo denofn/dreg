@@ -19,7 +19,7 @@ export function determineFullModuleName(depMap: Record<string, string>, sourceVa
   const depName = `${fullName}@${depMap[fullName!]}`;
 
   if (!keys.includes(depName))
-    throw new Error(`${sourceValue} is not available in the registry yet, try adding that dependency first`);
+    throw new Error(`${depName} is not available in the registry yet, try adding that dependency first`);
 
   return `/package/${depName}`;
 }
