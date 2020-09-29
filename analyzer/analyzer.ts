@@ -7,6 +7,7 @@ import { getDependencyMap } from "../utils/getDependencyMap.ts";
 import { diveFile } from "./diveFile.ts";
 import { getEntry } from "./getEntry.ts";
 import { getSpinner } from "./spinner.ts";
+import { resolveDependencyMap } from "../utils/resolveDependencyMap.ts";
 
 export async function analyze(d: string, v?: string, isJspm?: boolean, ghUser?: string): Promise<RegistryEntryV1> {
   const jsdelivrSrc = !!ghUser ? `${jsdelivr("gh")}/${ghUser}` : jsdelivr("npm");
@@ -27,7 +28,8 @@ export async function analyze(d: string, v?: string, isJspm?: boolean, ghUser?: 
     R.update({ version: pj.version!, description: pj.description ?? "" });
   }
 
-  const depMap = getDependencyMap(pj);
+  const rawDepMap = getDependencyMap(pj);
+  const depMap = await resolveDependencyMap(rawDepMap);
 
   const { entry, typesEntry } = getEntry(pj, R);
   R.update({ entry, typesEntry });
