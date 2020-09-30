@@ -5,6 +5,7 @@ import { askImportStrategy } from "./questions/importStrategy.ts";
 import { askPackageName } from "./questions/packageName.ts";
 import { askVersion } from "./questions/version.ts";
 import { bootstrapPackage } from "./state.ts";
+import { askEntry } from "./questions/entry.ts";
 
 export async function setupPackageState({
   name: _name,
@@ -13,6 +14,7 @@ export async function setupPackageState({
   ghInfo: _ghInfo,
   version: _version,
   isAtTypes: _isAtTypes,
+  entry: _entry,
 }: Partial<RegistryEntryV2> = {}) {
   const name = _name ?? (await askPackageName());
   const importType = _importType ?? (await askImportType());
@@ -27,11 +29,23 @@ export async function setupPackageState({
   }
 
   const version = _version ?? (await askVersion({ name, importType }));
+  const entry = _entry ?? (await askEntry({ importType }));
   const isAtTypes = _isAtTypes ?? name.startsWith("@types/");
+
+  const partialEntry: Partial<RegistryEntryV2> = {
+    entry,
+    name,
+    importType,
+    importStrategy,
+    ghInfo,
+    version,
+    isAtTypes,
+  };
+  if (typeof entry === "undefined") delete partialEntry.entry;
 
   bootstrapPackage(
     {
-      entry: { name, importType, importStrategy, ghInfo, version, isAtTypes },
+      entry: partialEntry,
       depMap: {},
     },
   );

@@ -24,17 +24,16 @@ export type RegistryEntryV2 = {
   version: string;
   description: string;
   entry: string;
+  rewrites: Rewrites;
+  hasDefaultExport: boolean;
   typesEntry?: string;
   addProcess?: boolean;
   ghInfo?: {
     user: string;
     repo: string;
-    entryFile: string;
     packageJsonLocation?: string;
   };
-  rewrites: Rewrites;
   additions?: Record<string, string[]>;
-  hasDefaultExport: boolean;
 };
 
 export type Registry = Record<string, RegistryEntryV1>;

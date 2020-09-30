@@ -17,22 +17,32 @@ export default async (context: any) => {
   const registryEntry = registry[pckge as keyof typeof registry];
   if (!keys.includes(pckge)) context.throw(404);
 
-  const [source, fileURL] = await getSource(context.request.url.pathname, registryEntry, pckge, params["0"]);
+  const [source, fileURL] = await getSource(
+    context.request.url.pathname,
+    registryEntry,
+    pckge,
+    params["0"],
+  );
   const parsedFileUrl = path.parse(fileURL);
   context.response.body = source;
   context.response.headers.set(
     "content-type",
-    `application/${parsedFileUrl.ext.startsWith(".ts") ? "typescript" : "javascript"}; charset=utf-8`
+    `application/${
+      parsedFileUrl.ext.startsWith(".ts") ? "typescript" : "javascript"
+    }; charset=utf-8`,
   );
 
   if (noSource && registryEntry.entry.endsWith(".d.ts")) {
-    context.response.headers.set("x-typescript-types", path.join(context.request.url.pathname, registryEntry.entry));
+    context.response.headers.set(
+      "x-typescript-types",
+      path.join(context.request.url.pathname, registryEntry.entry),
+    );
   } else if (noSource && registryEntry.typesEntry!) {
     context.response.headers.set(
       "x-typescript-types",
       registryEntry.importStrategy === "jspm"
         ? registryEntry.typesEntry
-        : path.join(context.request.url.pathname, registryEntry.typesEntry!)
+        : path.join(context.request.url.pathname, registryEntry.typesEntry!),
       // path.join(context.request.url.pathname, registryEntry.typesEntry!)
     );
   }
@@ -43,10 +53,12 @@ export default async (context: any) => {
   context.response.headers.set("access-control-expose-headers", "*");
   context.response.headers.set(
     "etag",
-    `W/"${encoder.encode(context.response.body).byteLength}-${hash
-      .createHash("sha1")
-      .update(context.response.body)
-      .toString()
-      .substring(0, 27)}"`
+    `W/"${encoder.encode(context.response.body).byteLength}-${
+      hash
+        .createHash("sha1")
+        .update(context.response.body)
+        .toString()
+        .substring(0, 27)
+    }"`,
   );
 };

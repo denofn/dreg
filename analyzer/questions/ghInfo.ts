@@ -19,9 +19,6 @@ export async function askGhInfo({
     }));
   if (repo === "") repo = name;
 
-  let entryFile = _ghInfo?.entryFile ??
-    (await Input.prompt(blue(`At what path is the entry file located?`)));
-
   let packageJsonLocation: string | undefined = _ghInfo?.packageJsonLocation ??
     (await Input.prompt({
       message: blue(
@@ -31,5 +28,5 @@ export async function askGhInfo({
     }));
   if (packageJsonLocation === "") packageJsonLocation = undefined;
 
-  return { user, repo, packageJsonLocation, entryFile };
+  return { user, repo, packageJsonLocation };
 }

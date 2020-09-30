@@ -14,7 +14,10 @@ async function doesFileExist(url: string) {
  *   1.2. Importer is any other type of js/ts file
  * 2. Try in this order: .ts, .d.ts, jsExtensions, jsxExtensions
  */
-export async function determineLocalDepExtension(base: string, importPath: string): Promise<string> {
+export async function determineLocalDepExtension(
+  base: string,
+  importPath: string,
+): Promise<string> {
   const parsedBaseUrl = new URL(base);
   const resolvedBaseUrl = parsedBaseUrl;
   const parsedBasePath = path.parse(parsedBaseUrl.pathname);
@@ -27,10 +30,15 @@ export async function determineLocalDepExtension(base: string, importPath: strin
     parsedBasePath.ext === ".ts" &&
     (parsedBasePath.base as string).endsWith(".d.ts") &&
     (await doesFileExist(`${resolvedBaseUrl}.d.ts`))
-  )
+  ) {
     return `${importPath}.d.ts`;
-  if (jsExtensions.includes(parsedBasePath.ext) && (await doesFileExist(`${resolvedBaseUrl}${parsedBasePath.ext}`)))
+  }
+  if (
+    jsExtensions.includes(parsedBasePath.ext) &&
+    (await doesFileExist(`${resolvedBaseUrl}${parsedBasePath.ext}`))
+  ) {
     return `${importPath}${parsedBasePath.ext}`;
+  }
 
   if (await doesFileExist(`${resolvedBaseUrl}.js`)) return `${importPath}.js`;
 
