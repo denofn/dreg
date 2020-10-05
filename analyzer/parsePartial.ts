@@ -1,4 +1,4 @@
-import { Select, blue } from "./deps.ts";
+import { blue, Select } from "./deps.ts";
 import type { RegistryEntryV2 } from "../runtime/types/registry.ts";
 
 export async function parsePartialEntry(partial?: string) {

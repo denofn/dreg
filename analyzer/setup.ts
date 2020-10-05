@@ -15,7 +15,7 @@ export async function setupPackageState({
   version: _version,
   isAtTypes: _isAtTypes,
   entry: _entry,
-}: Partial<RegistryEntryV2> = {}) {
+}: Partial<RegistryEntryV2> = {}): Promise<Partial<RegistryEntryV2>> {
   const name = _name ?? (await askPackageName());
   const importType = _importType ?? (await askImportType());
 
@@ -49,4 +49,6 @@ export async function setupPackageState({
       depMap: {},
     },
   );
+
+  return { name, version };
 }

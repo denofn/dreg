@@ -6,11 +6,11 @@ export type { PackageJson } from "https://cdn.dreg.dev/package/type-fest@0.16.0/
 
 export * as log from "https://deno.land/std@0.70.0/log/mod.ts";
 export {
-  red,
-  green,
-  bold,
-  yellow,
   blue,
+  bold,
+  green,
+  red,
+  yellow,
 } from "https://deno.land/std@0.70.0/fmt/colors.ts";
 export * as flags from "https://deno.land/std@0.70.0/flags/mod.ts";
 export * as path from "https://deno.land/std@0.70.0/path/mod.ts";
@@ -19,11 +19,11 @@ export { hash };
 
 export { wait } from "https://deno.land/x/wait@0.1.7/mod.ts";
 export {
+  Confirm,
   Input,
   Select,
-  Confirm,
 } from "https://deno.land/x/cliffy@v0.14.1/prompt/mod.ts";
 export {
-  parseFlags,
   OptionType,
+  parseFlags,
 } from "https://deno.land/x/cliffy@v0.14.1/flags/mod.ts";

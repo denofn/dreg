@@ -1,5 +1,7 @@
-import type { RegistryEntryV2 } from "../runtime/types/registry.ts";
+import { defaultOption, parseAskFlags } from "./parseAskFlags.ts";
 import { effector, hash } from "./deps.ts"; // TODO: use hash?
+
+import type { RegistryEntryV2 } from "../runtime/types/registry.ts";
 
 type StateEntry = {
   entry: Partial<RegistryEntryV2>;
@@ -14,6 +16,8 @@ export function getStateKey(entry: Partial<RegistryEntryV2>): string {
 }
 
 export const bootstrapPackage = effector.createEvent<StateEntry>();
+export const loadPartial = effector.createEvent();
+export const loadDepMap = effector.createEvent();
 export const updateDepMap = effector.createEvent();
 export const updateEntryMap = effector.createEvent();
 export const updateEntryValue = effector.createEvent();
@@ -22,10 +26,22 @@ export const state = effector
   .createStore({} as Record<string, StateEntry>)
   .on(
     bootstrapPackage,
-    (state: Record<string, StateEntry>, payload: StateEntry) => {
+    (state, payload) => {
       return {
         ...state,
         [getStateKey(payload.entry)]: payload,
       };
     },
   );
+
+export const setOptions = effector.createEvent<
+  { askPartial?: string; askRetry?: string }
+>();
+export const options = effector.createStore({
+  askPartial: defaultOption,
+  askRetry: defaultOption,
+}).on(setOptions, (state, { askPartial, askRetry }) => ({
+  ...state,
+  askPartial: parseAskFlags(askPartial),
+  askRetry: parseAskFlags(askRetry),
+}));

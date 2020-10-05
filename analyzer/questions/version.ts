@@ -1,7 +1,7 @@
 import type { RegistryEntryV2 } from "../../runtime/types/registry.ts";
 import { jsdelivr } from "../../utils/constants.ts";
 import { fetchPj } from "../../utils/fetchPj.ts";
-import { path, blue, Input, Confirm, wait } from "../deps.ts";
+import { blue, Confirm, Input, path, wait } from "../deps.ts";
 
 export async function askVersion({
   name,
@@ -19,11 +19,12 @@ export async function askVersion({
       path.join(cdnUrl, name),
     );
     spinner.stop();
-    const useLatestNpmVersion = await Confirm.prompt(
-      blue(
+    const useLatestNpmVersion = await Confirm.prompt({
+      message: blue(
         `The latest npm version of ${name} is ${latestNpmVersion}, do you want to use this version?`,
       ),
-    );
+      default: true,
+    });
     if (useLatestNpmVersion) return latestNpmVersion!;
   }
 

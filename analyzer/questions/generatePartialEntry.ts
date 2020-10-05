@@ -1,6 +1,6 @@
 import type { RegistryEntryV2 } from "../../runtime/types/registry.ts";
-import { Input, Confirm, blue, red, path } from "../deps.ts";
-import { state } from "../state.ts";
+import { blue, Confirm, Input, path, red } from "../deps.ts";
+import { options, state } from "../state.ts";
 
 type Props = {
   didSomethingHappen?: boolean;
@@ -19,20 +19,26 @@ function mapState() {
 export async function askGeneratePartialEntry(
   { didSomethingHappen }: Props = {},
 ): Promise<void> {
-  const shouldGenerate = await Confirm.prompt(
-    blue(
-      `${
-        didSomethingHappen ? "Oops! An error occured! " : ""
-      }Do you want to create a partial registry entry? `,
-    ) +
-      red("This will quit the analyzer!"),
-  );
+  const { askPartial } = options.getState();
 
-  if (!shouldGenerate) return;
+  if (askPartial === "never") return;
+  if (askPartial === "afterFail" && !!didSomethingHappen === false) return;
+  if (askPartial !== "auto") {
+    const shouldGenerate = await Confirm.prompt(
+      blue(
+        `${
+          didSomethingHappen ? "Oops! An error occured! " : ""
+        }Do you want to create a partial registry entry? `,
+      ) +
+        red("This will quit the analyzer!"),
+    );
+
+    if (!shouldGenerate) return;
+  }
 
   const fileName = path.parse(
     await Input.prompt({
-      message: blue("What filename do you want to use?"),
+      message: blue("What filename do you want to use for the registry entry?"),
       default: "entry.json",
     }),
   ).name;
