@@ -1,7 +1,11 @@
-export async function runAnalyzer(stateKey: string): Promise<void> {
-  // TODO: get full state entry (depmap and p-entry)
+import { buildPjUrl, fetchPj } from "../utils/fetchPj.ts";
+import { state } from "./state.ts";
 
-  // TODO: get pj
+export async function runAnalyzer(stateKey: string): Promise<void> {
+  const packageState = state.getState()[stateKey];
+
+  const pjUrl = buildPjUrl(packageState.entry);
+  const pj = await fetchPj(pjUrl);
   // TODO: update depmap
 
   // TODO: get full entrypath (needs pj for npm if not manually defined)

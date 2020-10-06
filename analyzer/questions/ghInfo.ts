@@ -24,7 +24,7 @@ export async function askGhInfo({
       message: blue(
         `At what path is the package.json located?`,
       ),
-      default: ".",
+      default: "./package.json",
     }));
   if (packageJsonLocation === "") packageJsonLocation = undefined;
 

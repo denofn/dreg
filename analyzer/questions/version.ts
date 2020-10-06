@@ -12,11 +12,11 @@ export async function askVersion({
   const cdnUrl = jsdelivr(importType);
 
   if (importType === "gh") {
-    // fetch latest tag?
+    // TODO: fetch latest tag!
   } else if (importType === "npm") {
     const spinner = wait(`Fetching latest version of ${name}`).start();
-    const [, { version: latestNpmVersion }] = await fetchPj(
-      path.join(cdnUrl, name),
+    const { version: latestNpmVersion } = await fetchPj(
+      new URL(path.join(cdnUrl, name, "package.json")).href,
     );
     spinner.stop();
     const useLatestNpmVersion = await Confirm.prompt({
