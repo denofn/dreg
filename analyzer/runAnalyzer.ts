@@ -22,13 +22,9 @@ export async function runAnalyzer(stateKey: string): Promise<void> {
 
   if (!shallowEquals(deps, packageState.deps ?? {})) {
     spinner.text = `Updating deps for ${stateKey}`;
-
     updateDeps({ key: stateKey, value: deps });
 
-    spinner.stopAndPersist({
-      text: `Updated deps for ${stateKey}`,
-    });
-
+    spinner.succeed(`Updated deps for ${stateKey}`);
     await askGeneratePartialEntry();
   }
 

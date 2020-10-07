@@ -9,15 +9,15 @@ export function getEntryPath(
   pj?: PackageJson,
 ): string {
   if (!entry.importType) throw new Error("Couldn't find entry importType");
+  if (!entry.name) throw new Error("Couldn't find entry name");
+  if (!entry.version) throw new Error("Couldn't find entry version");
 
   let base;
 
   if (entry.importType === "npm" && entry.importStrategy === "jspm") {
-    // TODO: do jspm npm
-    base = jspm;
+    return new URL(path.join(jspm, `${entry.name}@${entry.version}!cjs`)).href;
   } else if (entry.importType === "npm") {
-    // TODO: do jsdelivr npm
-    base = jsdelivr("npm");
+    base = path.join(jsdelivr("npm"), `${entry.name}@${entry.version}`);
   } else if (entry.importStrategy === "jspm") {
     throw new Error("Unable to fetch Github source code from JSPM!");
   } else {
@@ -25,7 +25,11 @@ export function getEntryPath(
       throw new Error("Not enough info in entry ghInfo!");
     }
 
-    base = path.join(jsdelivr("gh"), entry.ghInfo.user, entry.ghInfo.repo);
+    base = path.join(
+      jsdelivr("gh"),
+      entry.ghInfo.user,
+      `${entry.ghInfo.repo}@${entry.version}`,
+    );
   }
 
   let entryLocation = entry.entry;
