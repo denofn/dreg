@@ -43,12 +43,7 @@ export async function setupPackageState({
   };
   if (typeof entry === "undefined") delete partialEntry.entry;
 
-  bootstrapPackage(
-    {
-      entry: partialEntry,
-      depMap: {},
-    },
-  );
+  bootstrapPackage(partialEntry);
 
   return { name, version };
 }

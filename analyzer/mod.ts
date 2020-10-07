@@ -17,13 +17,6 @@ try {
         type: OptionType.STRING,
       },
       {
-        // Load depMap in state
-        // TODO: check what's best for depmap loading: ignore package.json if package is mentioned in loaded depmap or merge depmaps
-        name: "depMap",
-        aliases: ["d"],
-        type: OptionType.STRING,
-      },
-      {
         // ask for partialEntry creation
         // TODO: check if askPartial is enough for custom entries per package and overrides, etc...
         name: "askPartial",

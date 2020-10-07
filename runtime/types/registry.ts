@@ -34,6 +34,7 @@ export type RegistryEntryV2 = {
     packageJsonLocation?: string;
   };
   additions?: Record<string, string[]>;
+  deps: Record<string, string>;
 };
 
 export type Registry = Record<string, RegistryEntryV1>;

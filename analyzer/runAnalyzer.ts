@@ -4,7 +4,7 @@ import { state } from "./state.ts";
 export async function runAnalyzer(stateKey: string): Promise<void> {
   const packageState = state.getState()[stateKey];
 
-  const pjUrl = buildPjUrl(packageState.entry);
+  const pjUrl = buildPjUrl(packageState);
   const pj = await fetchPj(pjUrl);
   // TODO: update depmap
 

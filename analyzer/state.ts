@@ -1,12 +1,7 @@
 import { defaultOption, parseAskFlags } from "./parseAskFlags.ts";
-import { effector, hash } from "./deps.ts"; // TODO: use hash?
+import { effector } from "./deps.ts";
 
 import type { RegistryEntryV2 } from "../runtime/types/registry.ts";
-
-type StateEntry = {
-  entry: Partial<RegistryEntryV2>;
-  depMap: Record<string, string>;
-};
 
 export function getStateKey(entry: Partial<RegistryEntryV2>): string {
   if (!entry.name || !entry.version) {
@@ -15,24 +10,54 @@ export function getStateKey(entry: Partial<RegistryEntryV2>): string {
   return `${entry.name}@${entry.version}`;
 }
 
-export const bootstrapPackage = effector.createEvent<StateEntry>();
-export const loadPartial = effector.createEvent();
-export const loadDepMap = effector.createEvent();
-export const updateDepMap = effector.createEvent();
-export const updateEntryMap = effector.createEvent();
-export const updateEntryValue = effector.createEvent();
+export const bootstrapState = effector.createEvent<
+  Record<string, Partial<RegistryEntryV2>>
+>();
+export const bootstrapPackage = effector.createEvent<
+  Partial<RegistryEntryV2>
+>();
+export const updateEntry = effector.createEvent<{
+  // key = stateKey
+  key: string;
+  value: Partial<RegistryEntryV2>;
+}>();
+export const updateDeps = effector.createEvent<{
+  // key = stateKey
+  key: string;
+  value: Record<string, string>;
+}>();
+// export const loadDepMap = effector.createEvent();
+// export const updateEntryValue = effector.createEvent();
 
 export const state = effector
-  .createStore({} as Record<string, StateEntry>)
+  .createStore({} as Record<string, Partial<RegistryEntryV2>>)
+  .on(bootstrapState, (_, payload) => payload)
   .on(
     bootstrapPackage,
     (state, payload) => {
-      return {
+      ({
         ...state,
-        [getStateKey(payload.entry)]: payload,
-      };
+        [getStateKey(payload)]: payload,
+      });
     },
-  );
+  )
+  .on(updateEntry, (state, { key, value }) => ({
+    ...state,
+    [key]: {
+      ...(state[key]),
+      ...value,
+    },
+  }))
+  .on(updateDeps, (state, { key, value }) => ({
+    ...state,
+    [key]: {
+      ...(state[key]),
+      deps: {
+        ...(state[key].deps ?? {}),
+        ...value,
+      },
+    },
+  }));
 
 export const setOptions = effector.createEvent<
   { askPartial?: string; askRetry?: string }

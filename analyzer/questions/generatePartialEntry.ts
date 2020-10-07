@@ -10,7 +10,7 @@ function mapState() {
   const rawState = state.getState();
   const mappedState = {} as Record<string, Partial<RegistryEntryV2>>;
   for (const k of Object.keys(rawState)) {
-    mappedState[k] = rawState[k].entry;
+    mappedState[k] = rawState[k];
   }
 
   return mappedState;
