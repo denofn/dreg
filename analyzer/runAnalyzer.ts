@@ -5,7 +5,7 @@ import { shallowEquals } from "../utils/shallowEquals.ts";
 import { dive } from "./dive.ts";
 import { askGeneratePartialEntry } from "./questions/generatePartialEntry.ts";
 import { spinner } from "./spinner.ts";
-import { state, updateDeps } from "./state.ts";
+import { state, /*cleanDeps, */ updateDeps } from "./state.ts";
 
 export async function runAnalyzer(stateKey: string): Promise<void> {
   spinner.text = `Initializing analyzer run for ${stateKey}`;
@@ -31,11 +31,12 @@ export async function runAnalyzer(stateKey: string): Promise<void> {
   const entryPath = getEntryPath(packageState, pj);
   spinner.succeed(`Entry path for ${stateKey} is ${entryPath}`);
 
-  dive(stateKey, entryPath);
+  const usedDeps = await dive(stateKey, entryPath);
 
-  await askGeneratePartialEntry();
-
-  // TODO: diveDeps(stateKey);
-
+  // TODO: cleanDeps({ key: stateKey, value: usedDeps });
   // await askGeneratePartialEntry();
+
+  // TODO: await diveDeps(stateKey, usedDeps);
+
+  await askGeneratePartialEntry({ finished: true });
 }

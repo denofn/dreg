@@ -4,6 +4,7 @@ import { options, state } from "../state.ts";
 
 type Props = {
   didSomethingHappen?: boolean;
+  finished?: boolean;
 };
 
 function mapState() {
@@ -17,13 +18,17 @@ function mapState() {
 }
 
 export async function askGeneratePartialEntry(
-  { didSomethingHappen }: Props = {},
+  { didSomethingHappen, finished }: Props = {},
 ): Promise<void> {
   const { askPartial } = options.getState();
 
-  if (askPartial === "never") return;
-  if (askPartial === "afterFail" && !!didSomethingHappen === false) return;
-  if (askPartial !== "auto") {
+  if (askPartial === "never" && !finished) return;
+  if (
+    askPartial === "afterFail" && !!didSomethingHappen === false && !finished
+  ) {
+    return;
+  }
+  if (askPartial !== "auto" && !finished) {
     const shouldGenerate = await Confirm.prompt(
       blue(
         `${

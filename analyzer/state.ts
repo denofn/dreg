@@ -1,7 +1,7 @@
 import { defaultOption, parseAskFlags } from "./parseAskFlags.ts";
 import { effector } from "./deps.ts";
 
-import type { RegistryEntryV2 } from "../runtime/types/registry.ts";
+import type { RegistryEntryV2, Rewrites } from "../runtime/types/registry.ts";
 
 export function getStateKey(entry: Partial<RegistryEntryV2>): string {
   if (!entry.name || !entry.version) {
@@ -26,8 +26,11 @@ export const updateDeps = effector.createEvent<{
   key: string;
   value: Record<string, string>;
 }>();
-// export const loadDepMap = effector.createEvent();
-// export const updateEntryValue = effector.createEvent();
+export const updateRewrites = effector.createEvent<{
+  key: string;
+  value: Rewrites;
+}>();
+export const cleanDeps = effector.createEvent();
 
 export const state = effector
   .createStore({} as Record<string, Partial<RegistryEntryV2>>)
@@ -54,6 +57,16 @@ export const state = effector
       ...(state[key]),
       deps: {
         ...(state[key].deps ?? {}),
+        ...value,
+      },
+    },
+  }))
+  .on(updateRewrites, (state, { key, value }) => ({
+    ...state,
+    [key]: {
+      ...(state[key]),
+      rewrites: {
+        ...(state[key].rewrites ?? {}),
         ...value,
       },
     },
