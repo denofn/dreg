@@ -4,8 +4,9 @@ import { askImportType } from "./questions/importType.ts";
 import { askImportStrategy } from "./questions/importStrategy.ts";
 import { askPackageName } from "./questions/packageName.ts";
 import { askVersion } from "./questions/version.ts";
-import { bootstrapPackage } from "./state.ts";
+import { bootstrapPackage, getStateKey } from "./state.ts";
 import { askEntry } from "./questions/entry.ts";
+import { spinner } from "./spinner.ts";
 
 export async function setupPackageState({
   name: _name,
@@ -44,6 +45,11 @@ export async function setupPackageState({
   if (typeof entry === "undefined") delete partialEntry.entry;
 
   bootstrapPackage(partialEntry);
+  spinner.succeed(
+    `Successfully bootstrapped analyzer run for ${
+      getStateKey({ name, version })
+    }`,
+  );
 
   return { name, version };
 }

@@ -1,5 +1,8 @@
 import { buildPjUrl, fetchPj } from "../utils/fetchPj.ts";
 import { getDeps } from "../utils/getDependencyMap.ts";
+import { getEntryPath } from "../utils/getEntryPath.ts";
+import { shallowEquals } from "../utils/shallowEquals.ts";
+import { dive } from "./dive.ts";
 import { askGeneratePartialEntry } from "./questions/generatePartialEntry.ts";
 import { spinner } from "./spinner.ts";
 import { state, updateDeps } from "./state.ts";
@@ -17,19 +20,26 @@ export async function runAnalyzer(stateKey: string): Promise<void> {
 
   const deps = getDeps(pj, packageState.deps);
 
-  // TODO: only do this if deps and packageState.deps are different
-  spinner.text = `Updating deps for ${stateKey}`;
-  updateDeps({ key: stateKey, value: deps });
+  if (!shallowEquals(deps, packageState.deps ?? {})) {
+    spinner.text = `Updating deps for ${stateKey}`;
 
-  spinner.stopAndPersist({
-    text: `Updated deps for ${stateKey}`,
-  });
+    updateDeps({ key: stateKey, value: deps });
+
+    spinner.stopAndPersist({
+      text: `Updated deps for ${stateKey}`,
+    });
+
+    await askGeneratePartialEntry();
+  }
+
+  const entryPath = getEntryPath(packageState, pj);
+  spinner.succeed(`Entry path for ${stateKey} is ${entryPath}`);
+
+  dive(stateKey, entryPath);
 
   await askGeneratePartialEntry();
+
+  // TODO: diveDeps(stateKey);
+
+  // await askGeneratePartialEntry();
 }
-
-// TODO: get full entrypath (needs pj for npm if not manually defined)
-
-// TODO: recursively run through files
-
-// TODO: spawn analyzer of depmap

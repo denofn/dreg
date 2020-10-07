@@ -3,7 +3,7 @@ import { parsePartialEntry } from "./parsePartial.ts";
 import { askGeneratePartialEntry } from "./questions/generatePartialEntry.ts";
 import { runAnalyzer } from "./runAnalyzer.ts";
 import { setupPackageState } from "./setup.ts";
-import { getStateKey, setOptions, state } from "./state.ts";
+import { getStateKey, setOptions } from "./state.ts";
 
 try {
   const { flags } = parseFlags(Deno.args, {
@@ -38,8 +38,6 @@ try {
   await askGeneratePartialEntry();
 
   await runAnalyzer(getStateKey(basePackage));
-
-  console.log(state.getState());
 } catch (e) {
   await askGeneratePartialEntry({ didSomethingHappen: true });
 }

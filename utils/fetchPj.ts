@@ -12,9 +12,7 @@ export function buildPjUrl(entry: Partial<RegistryEntryV2>): string {
   } else if (entry.importType === "npm") {
     // TODO: do jsdelivr npm
     return new URL(jsdelivr("npm")).href;
-  }
-
-  if (entry.importStrategy === "jspm") {
+  } else if (entry.importStrategy === "jspm") {
     throw new Error("Unable to fetch Github source code from JSPM!");
   }
 
