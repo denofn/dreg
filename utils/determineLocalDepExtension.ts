@@ -1,7 +1,8 @@
 import { path } from "./deps.ts";
 
-const jsExtensions = [".js", ".es6", ".mjs"];
-const jsxExtensions = [".jsx", ".tsx"];
+const tsExtensions = [".ts", ".tsx"];
+const jsExtensions = [".js", ".es6", ".mjs", ".jsx"];
+// const jsxExtensions = [".jsx", ".tsx"];
 
 async function doesFileExist(url: string) {
   const { status } = await fetch(url);
@@ -22,6 +23,7 @@ export async function determineLocalDepExtension(
   const resolvedBaseUrl = parsedBaseUrl;
   const parsedBasePath = path.parse(parsedBaseUrl.pathname);
   resolvedBaseUrl.pathname = path.join(parsedBasePath.dir, importPath);
+  console.log(resolvedBaseUrl.href);
 
   if (!!path.parse(importPath).ext) return importPath;
   if (await doesFileExist(resolvedBaseUrl.href)) return importPath;
@@ -32,21 +34,15 @@ export async function determineLocalDepExtension(
     (await doesFileExist(`${resolvedBaseUrl}.d.ts`))
   ) {
     return `${importPath}.d.ts`;
-  }
-  if (
-    jsExtensions.includes(parsedBasePath.ext) &&
+  } else if (
+    [...tsExtensions, ...jsExtensions].includes(parsedBasePath.ext) &&
     (await doesFileExist(`${resolvedBaseUrl}${parsedBasePath.ext}`))
   ) {
     return `${importPath}${parsedBasePath.ext}`;
   }
 
+  if (await doesFileExist(`${resolvedBaseUrl}.ts`)) return `${importPath}.ts`;
   if (await doesFileExist(`${resolvedBaseUrl}.js`)) return `${importPath}.js`;
 
   throw new Error("Could not resolve extension, quitting");
 }
-// if ((parsedBasePath.base as string).endsWith(".d.ts")) {
-
-// }
-// } esle if (jsxExtensions.includes(parsedBasePath.ext)) {
-// } else if (jsExtensions.includes(parsedBasePath.ext)) {
-// }

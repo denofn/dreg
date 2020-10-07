@@ -39,5 +39,6 @@ try {
 
   await runAnalyzer(getStateKey(basePackage));
 } catch (e) {
+  console.error(e);
   await askGeneratePartialEntry({ didSomethingHappen: true });
 }

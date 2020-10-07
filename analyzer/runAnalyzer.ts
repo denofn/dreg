@@ -33,7 +33,7 @@ export async function runAnalyzer(stateKey: string): Promise<void> {
 
   const usedDeps = await dive(stateKey, entryPath);
 
-  // TODO: cleanDeps({ key: stateKey, value: usedDeps });
+  // TODO: await cleanDeps({ key: stateKey, value: usedDeps });
   // await askGeneratePartialEntry();
 
   // TODO: await diveDeps(stateKey, usedDeps);

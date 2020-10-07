@@ -41,6 +41,15 @@ export async function askGeneratePartialEntry(
     if (!shouldGenerate) return;
   }
 
+  if (finished) {
+    const shouldShowPrintout = await Confirm.prompt({
+      message: blue(`Do you want to see the partial registry before saving?`),
+      default: true,
+    });
+
+    if (shouldShowPrintout) console.log(state.getState());
+  }
+
   const fileName = path.parse(
     await Input.prompt({
       message: blue("What filename do you want to use for the registry entry?"),

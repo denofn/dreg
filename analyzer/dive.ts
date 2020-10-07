@@ -1,5 +1,8 @@
+import { parse } from "./deps.ts";
+import { getReferences } from "./getReferences.ts";
+import { scanTokens } from "./scanTokens.ts";
 import { spinner } from "./spinner.ts";
-import { state, updateRewrites } from "./state.ts";
+import { state, updateEntry, updateRewrites } from "./state.ts";
 
 export async function dive(
   stateKey: string,
@@ -7,16 +10,34 @@ export async function dive(
   _usedDeps: string[] = [],
 ): Promise<string[]> {
   const packageState = state.getState()[stateKey];
-  console.log(packageState);
-  if (!!packageState.rewrites?.[entryPath]) return _usedDeps; // bail if already exists
+  if (!!packageState.rewrites?.[entryPath]) {
+    // TODO: dive imports (not deps)
+    console.log(Object.entries(packageState.rewrites[entryPath]));
 
-  spinner.text = `Diving file ${entryPath}`;
-  spinner.start();
+    return _usedDeps;
+  } else {
+    spinner.text = `Diving file ${entryPath}`;
+    spinner.start();
 
-  const rewrites = {};
-  let usedDeps: string[] = _usedDeps;
-  updateRewrites({ key: stateKey, value: { [entryPath]: rewrites } });
+    const file = await (await fetch(entryPath)).text();
+    const { body: parsedFileBody, comments: parsedFileComments } = parse(file);
 
-  spinner.succeed(`Finished analyzing ${entryPath}`);
-  return usedDeps;
+    const { rewrites, usedDeps, hasDefaultExport } = await scanTokens(
+      entryPath,
+      [...getReferences(parsedFileComments), ...parsedFileBody],
+      packageState.deps ?? {},
+    );
+
+    updateRewrites({ key: stateKey, value: { [entryPath]: rewrites } });
+    if (!packageState.hasDefaultExport && !!hasDefaultExport) {
+      updateEntry({ key: stateKey, value: { hasDefaultExport } });
+    }
+
+    spinner.succeed(`Finished analyzing ${entryPath}`);
+
+    // TODO: dive imports (not deps)
+    console.log(Object.entries(rewrites));
+
+    return [..._usedDeps, ...usedDeps];
+  }
 }
