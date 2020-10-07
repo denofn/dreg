@@ -1,7 +1,8 @@
 import type { RegistryEntryV2 } from "../../runtime/types/registry.ts";
 import { jsdelivr } from "../../utils/constants.ts";
 import { fetchPj } from "../../utils/fetchPj.ts";
-import { blue, Confirm, Input, path, wait } from "../deps.ts";
+import { blue, Confirm, Input, path } from "../deps.ts";
+import { spinner } from "../spinner.ts";
 
 export async function askVersion({
   name,
@@ -14,7 +15,9 @@ export async function askVersion({
   if (importType === "gh") {
     // TODO: fetch latest tag!
   } else if (importType === "npm") {
-    const spinner = wait(`Fetching latest version of ${name}`).start();
+    spinner.text = `Fetching latest version of ${name}`;
+    spinner.start();
+
     const { version: latestNpmVersion } = await fetchPj(
       new URL(path.join(cdnUrl, name, "package.json")).href,
     );

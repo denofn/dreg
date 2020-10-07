@@ -1,3 +1,4 @@
+import { semver } from "./deps.ts";
 import type { PackageJson } from "./deps.ts";
 
 export function getDeps(
@@ -6,6 +7,36 @@ export function getDeps(
 ): Record<string, string> {
   const pjDevDeps = pj.devDependencies ?? {};
   const pjDeps = pj.dependencies ?? {};
+
+  for (const dep in pjDevDeps) {
+    if (!semver.validRange(pjDevDeps[dep])) {
+      throw new Error(
+        `${dep}@${
+          pjDevDeps[dep]
+        } is not a valid dependency [from ${pj.name} devDependencies]`,
+      );
+    }
+  }
+
+  for (const dep in pjDeps) {
+    if (!semver.validRange(pjDeps[dep])) {
+      throw new Error(
+        `${dep}@${
+          pjDeps[dep]
+        } is not a valid dependency [from ${pj.name} dependencies]`,
+      );
+    }
+  }
+
+  for (const dep in deps) {
+    if (!semver.validRange(deps[dep])) {
+      throw new Error(
+        `${dep}@${
+          deps[dep]
+        } is not a valid dependency [from partial entry deps]`,
+      );
+    }
+  }
 
   return {
     ...pjDevDeps,
