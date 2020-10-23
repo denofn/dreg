@@ -1,4 +1,5 @@
-import { parse } from "./deps.ts";
+import { mergeUnique } from "../utils/mergeUnique.ts";
+import { parse, path } from "./deps.ts";
 import { getReferences } from "./getReferences.ts";
 import { scanTokens } from "./scanTokens.ts";
 import { spinner } from "./spinner.ts";
@@ -6,38 +7,66 @@ import { state, updateEntry, updateRewrites } from "./state.ts";
 
 export async function dive(
   stateKey: string,
-  entryPath: string,
+  entryPath: URL,
   _usedDeps: string[] = [],
 ): Promise<string[]> {
   const packageState = state.getState()[stateKey];
-  if (!!packageState.rewrites?.[entryPath]) {
-    // TODO: dive imports (not deps)
-    console.log(Object.entries(packageState.rewrites[entryPath]));
 
-    return _usedDeps;
+  async function callDive(
+    d: string[],
+    r: Record<string, string>,
+  ): Promise<string[]> {
+    // TODO: dive imports (not deps)
+    for (const [rewriteKey, rewriteValue] of Object.entries(r)) {
+      if (rewriteValue.includes("dregPackageJSONReference")) continue;
+
+      const newPath: URL = new URL("", entryPath);
+      newPath.pathname = path.join(
+        path.parse(newPath.pathname).dir,
+        rewriteValue.substring(1, rewriteValue.length - 1),
+      );
+
+      const importeeDeps = await dive(
+        stateKey,
+        newPath,
+        d,
+      );
+      d = mergeUnique(d, importeeDeps);
+    }
+
+    return d;
+  }
+
+  if (!!packageState.rewrites?.[entryPath.href]) {
+    return callDive(_usedDeps, packageState.rewrites[entryPath.href]);
   } else {
+    let deps: string[] = _usedDeps;
+
     spinner.text = `Diving file ${entryPath}`;
     spinner.start();
 
     const file = await (await fetch(entryPath)).text();
-    const { body: parsedFileBody, comments: parsedFileComments } = parse(file);
+    const { body: parsedFileBody, comments: parsedFileComments } = parse(file, {
+      sourceType: "module",
+      range: true,
+      comment: true,
+    });
 
     const { rewrites, usedDeps, hasDefaultExport } = await scanTokens(
-      entryPath,
+      entryPath.href,
       [...getReferences(parsedFileComments), ...parsedFileBody],
       packageState.deps ?? {},
     );
 
-    updateRewrites({ key: stateKey, value: { [entryPath]: rewrites } });
+    deps = mergeUnique(deps, usedDeps);
+
+    updateRewrites({ key: stateKey, value: { [entryPath.href]: rewrites } });
     if (!packageState.hasDefaultExport && !!hasDefaultExport) {
       updateEntry({ key: stateKey, value: { hasDefaultExport } });
     }
 
-    spinner.succeed(`Finished analyzing ${entryPath}`);
+    spinner.succeed(`Finished analyzing ${entryPath.href}`);
 
-    // TODO: dive imports (not deps)
-    console.log(Object.entries(rewrites));
-
-    return [..._usedDeps, ...usedDeps];
+    return callDive(deps, rewrites);
   }
 }

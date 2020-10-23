@@ -23,7 +23,6 @@ export async function determineLocalDepExtension(
   const resolvedBaseUrl = parsedBaseUrl;
   const parsedBasePath = path.parse(parsedBaseUrl.pathname);
   resolvedBaseUrl.pathname = path.join(parsedBasePath.dir, importPath);
-  console.log(resolvedBaseUrl.href);
 
   if (!!path.parse(importPath).ext) return importPath;
   if (await doesFileExist(resolvedBaseUrl.href)) return importPath;
@@ -41,8 +40,13 @@ export async function determineLocalDepExtension(
     return `${importPath}${parsedBasePath.ext}`;
   }
 
-  if (await doesFileExist(`${resolvedBaseUrl}.ts`)) return `${importPath}.ts`;
   if (await doesFileExist(`${resolvedBaseUrl}.js`)) return `${importPath}.js`;
+  if (await doesFileExist(`${resolvedBaseUrl}.ts`)) return `${importPath}.ts`;
+  if (
+    await doesFileExist(`${resolvedBaseUrl}.d.ts`)
+  ) {
+    return `${importPath}.d.ts`;
+  }
 
-  throw new Error("Could not resolve extension, quitting");
+  throw new Error(`Could not resolve extension for ${importPath}, quitting`);
 }
