@@ -10,63 +10,73 @@ export async function dive(
   entryPath: URL,
   _usedDeps: string[] = [],
 ): Promise<string[]> {
-  const packageState = state.getState()[stateKey];
+  try {
+    const packageState = state.getState()[stateKey];
 
-  async function callDive(
-    d: string[],
-    r: Record<string, string>,
-  ): Promise<string[]> {
-    // TODO: dive imports (not deps)
-    for (const [rewriteKey, rewriteValue] of Object.entries(r)) {
-      if (rewriteValue.includes("dregPackageJSONReference")) continue;
+    async function callDive(
+      d: string[],
+      r: Record<string, string>,
+    ): Promise<string[]> {
+      // TODO: dive imports (not deps)
+      for (const [rewriteKey, rewriteValue] of Object.entries(r)) {
+        if (rewriteValue.includes("dregPackageJSONReference")) continue;
+        if (rewriteValue.includes("dregPackageReference:")) continue;
+        if (rewriteValue === "") continue;
 
-      const newPath: URL = new URL("", entryPath);
-      newPath.pathname = path.join(
-        path.parse(newPath.pathname).dir,
-        rewriteValue.substring(1, rewriteValue.length - 1),
-      );
+        const newPath: URL = new URL("", entryPath);
+        newPath.pathname = path.join(
+          path.parse(newPath.pathname).dir,
+          rewriteValue.substring(1, rewriteValue.length - 1),
+        );
 
-      const importeeDeps = await dive(
-        stateKey,
-        newPath,
-        d,
-      );
-      d = mergeUnique(d, importeeDeps);
+        const importeeDeps = await dive(
+          stateKey,
+          newPath,
+          d,
+        );
+        d = mergeUnique(d, importeeDeps);
+      }
+
+      return d;
     }
 
-    return d;
-  }
+    if (!!packageState.rewrites?.[entryPath.href]) {
+      return callDive(_usedDeps, packageState.rewrites[entryPath.href]);
+    } else {
+      let deps: string[] = _usedDeps;
 
-  if (!!packageState.rewrites?.[entryPath.href]) {
-    return callDive(_usedDeps, packageState.rewrites[entryPath.href]);
-  } else {
-    let deps: string[] = _usedDeps;
+      spinner.text = `Diving file ${entryPath}`;
+      // spinner.start();
 
-    spinner.text = `Diving file ${entryPath}`;
-    spinner.start();
+      const file = await (await fetch(entryPath)).text();
+      const { body: parsedFileBody, comments: parsedFileComments } = parse(
+        file,
+        {
+          sourceType: "module",
+          range: true,
+          comment: true,
+        },
+      );
 
-    const file = await (await fetch(entryPath)).text();
-    const { body: parsedFileBody, comments: parsedFileComments } = parse(file, {
-      sourceType: "module",
-      range: true,
-      comment: true,
-    });
+      const { rewrites, usedDeps, hasDefaultExport } = await scanTokens(
+        entryPath.href,
+        [...getReferences(parsedFileComments), ...parsedFileBody],
+        packageState.deps ?? {},
+      );
 
-    const { rewrites, usedDeps, hasDefaultExport } = await scanTokens(
-      entryPath.href,
-      [...getReferences(parsedFileComments), ...parsedFileBody],
-      packageState.deps ?? {},
-    );
+      deps = mergeUnique(deps, usedDeps);
 
-    deps = mergeUnique(deps, usedDeps);
+      updateRewrites({ key: stateKey, value: { [entryPath.href]: rewrites } });
+      if (!packageState.hasDefaultExport && !!hasDefaultExport) {
+        updateEntry({ key: stateKey, value: { hasDefaultExport } });
+      }
 
-    updateRewrites({ key: stateKey, value: { [entryPath.href]: rewrites } });
-    if (!packageState.hasDefaultExport && !!hasDefaultExport) {
-      updateEntry({ key: stateKey, value: { hasDefaultExport } });
+      spinner.succeed(`Finished analyzing ${entryPath.href}`);
+
+      return callDive(deps, rewrites);
     }
-
-    spinner.succeed(`Finished analyzing ${entryPath.href}`);
-
-    return callDive(deps, rewrites);
+  } catch (e) {
+    console.error(entryPath, e);
+    throw e;
   }
 }

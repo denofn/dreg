@@ -20,10 +20,17 @@ export function determineFullModuleName(
   if (!!deps[sourceValue]) fullName = sourceValue;
   else if (!!deps[`@types/${sourceValue}`]) {
     fullName = `@types/${sourceValue}`;
-  } else throw new Error(`Cannot resolve ${sourceValue}`);
+  } else {
+    const depNames = Object.keys(deps);
+    for (const name of depNames) {
+      if (sourceValue.indexOf(name) === 0) {
+        fullName = sourceValue;
+        break;
+      }
+    }
+  }
 
-  // TODO: parse version with semver and get best version from npm/gh
-  const depName = `${fullName}@${deps[fullName!]}`;
+  if (!fullName) throw new Error(`Cannot resolve ${sourceValue}`);
 
-  return `/package/${depName}`;
+  return `dregPackageReference:${fullName}`;
 }

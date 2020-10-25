@@ -15,9 +15,11 @@ export async function resolveLocalImport(
     entryPath,
     sourceValue!,
   );
+
   resolvedSource = resolvedSource.startsWith("./npm:")
     ? resolvedSource.replace("./npm:", "/package/")
     : resolvedSource;
+
   const encodedDep = encodeDepValue(q, resolvedSource);
 
   return { [source!]: encodedDep };
